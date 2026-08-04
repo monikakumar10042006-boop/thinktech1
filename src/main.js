@@ -29,7 +29,7 @@ window.goTo = goTo;
 window.openAdmin = openAdmin;
 window.adminLogin = adminLogin;
 
-document.addEventListener('DOMContentLoaded', () => {
+const initializeApp = () => {
   // Start background live synchronization loop
   startLiveSync();
 
@@ -244,4 +244,10 @@ document.addEventListener('DOMContentLoaded', () => {
       e.returnValue = '';
     }
   });
-});
+};
+
+if (document.readyState === 'loading') {
+  document.addEventListener('DOMContentLoaded', initializeApp);
+} else {
+  initializeApp();
+}

@@ -72,6 +72,8 @@ app.post('/api/sync', (req, res) => {
     questions
   } = req.body;
 
+  console.log(`Sync request: isAdmin=${isAdmin}, participantsCount=${participants ? participants.length : 0}`);
+
   let hasChanges = false;
 
   // 1. Merge incoming participants
