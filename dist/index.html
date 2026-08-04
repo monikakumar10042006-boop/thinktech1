@@ -20,7 +20,7 @@
       window.goTo('screen-admin-login');
     };
   </script>
-  <script type="module" crossorigin src="/assets/index-DzHXd-O1.js"></script>
+  <script type="module" crossorigin src="/assets/index-CrezbBTO.js"></script>
   <link rel="stylesheet" crossorigin href="/assets/index-VtxBl0FF.css">
 </head>
 <body>
@@ -385,10 +385,22 @@
 
       <!-- Full Answer & Explanation Review for Participant -->
       <div id="complete-explanations-wrap" style="margin-top: 20px; width: 100%; text-align: left; display: none;">
-        <h3 style="font-family: var(--font-display); font-size: 0.95rem; color: var(--cyan); margin-bottom: 10px; display: flex; align-items: center; gap: 6px;">
-          <span>💡</span> Full Answer Review &amp; Rationales
-        </h3>
-        <div id="complete-explanations-list" style="display: flex; flex-direction: column; gap: 12px; max-height: 280px; overflow-y: auto; padding-right: 4px;"></div>
+        <!-- Unlock Section -->
+        <div id="complete-unlock-wrap" style="margin-bottom: 15px; text-align: center; border: var(--glass-border); padding: 16px; border-radius: 12px; background: rgba(22, 29, 51, 0.4);">
+          <label style="font-family: var(--font-display); font-size: 0.85rem; color: var(--text-dim); display: block; margin-bottom: 10px; text-transform: uppercase; letter-spacing: 0.5px;">🔓 Enter Coordinator Passcode to Review Answers</label>
+          <div style="display: flex; gap: 8px; justify-content: center; max-width: 320px; margin: 0 auto;">
+            <input type="password" id="complete-unlock-passcode" class="type-input" placeholder="Enter passcode..." style="padding: 10px 14px; font-size: 0.9rem; flex: 1; min-height: unset; height: 38px;">
+            <button class="btn solid" id="complete-unlock-btn" style="padding: 10px 16px; font-size: 0.85rem; margin: 0; min-height: unset; height: 38px; display: flex; align-items: center; justify-content: center;">Unlock</button>
+          </div>
+          <div id="complete-unlock-error" style="color: var(--danger); font-size: 0.8rem; margin-top: 8px; min-height: 1.2em;"></div>
+        </div>
+
+        <div id="complete-explanations-content" style="display: none;">
+          <h3 style="font-family: var(--font-display); font-size: 0.95rem; color: var(--cyan); margin-bottom: 10px; display: flex; align-items: center; gap: 6px;">
+            <span>💡</span> Full Answer Review &amp; Rationales
+          </h3>
+          <div id="complete-explanations-list" style="display: flex; flex-direction: column; gap: 12px; max-height: 280px; overflow-y: auto; padding-right: 4px;"></div>
+        </div>
       </div>
     </div>
     <div class="footer-note">Please hand the device back to the event coordinator</div>
@@ -469,10 +481,22 @@
 
       <!-- Answer Key & Explanations Review for Eliminated Participant -->
       <div id="ns-explanations-wrap" style="margin-top: 20px; width: 100%; text-align: left; display: none;">
-        <h3 style="font-family: var(--font-display); font-size: 0.95rem; color: var(--amber); margin-bottom: 10px; display: flex; align-items: center; gap: 6px;">
-          <span>💡</span> Answer Review &amp; Explanations
-        </h3>
-        <div id="ns-explanations-list" style="display: flex; flex-direction: column; gap: 10px; max-height: 240px; overflow-y: auto; padding-right: 4px;"></div>
+        <!-- Unlock Section -->
+        <div id="ns-unlock-wrap" style="margin-bottom: 15px; text-align: center; border: var(--glass-border); padding: 16px; border-radius: 12px; background: rgba(22, 29, 51, 0.4);">
+          <label style="font-family: var(--font-display); font-size: 0.85rem; color: var(--text-dim); display: block; margin-bottom: 10px; text-transform: uppercase; letter-spacing: 0.5px;">🔓 Enter Coordinator Passcode to Review Answers</label>
+          <div style="display: flex; gap: 8px; justify-content: center; max-width: 320px; margin: 0 auto;">
+            <input type="password" id="ns-unlock-passcode" class="type-input" placeholder="Enter passcode..." style="padding: 10px 14px; font-size: 0.9rem; flex: 1; min-height: unset; height: 38px;">
+            <button class="btn solid" id="ns-unlock-btn" style="padding: 10px 16px; font-size: 0.85rem; margin: 0; min-height: unset; height: 38px; display: flex; align-items: center; justify-content: center;">Unlock</button>
+          </div>
+          <div id="ns-unlock-error" style="color: var(--danger); font-size: 0.8rem; margin-top: 8px; min-height: 1.2em;"></div>
+        </div>
+
+        <div id="ns-explanations-content" style="display: none;">
+          <h3 style="font-family: var(--font-display); font-size: 0.95rem; color: var(--amber); margin-bottom: 10px; display: flex; align-items: center; gap: 6px;">
+            <span>💡</span> Answer Review &amp; Explanations
+          </h3>
+          <div id="ns-explanations-list" style="display: flex; flex-direction: column; gap: 10px; max-height: 240px; overflow-y: auto; padding-right: 4px;"></div>
+        </div>
       </div>
     </div>
     <div class="footer-note">Please hand the device back to the event coordinator</div>
@@ -518,10 +542,22 @@
 
       <!-- Answer Key & Explanations Review -->
       <div id="waiting-explanations-wrap" style="margin-top: 20px; width: 100%; text-align: left; display: none;">
-        <h3 style="font-family: var(--font-display); font-size: 0.95rem; color: var(--cyan); margin-bottom: 10px; display: flex; align-items: center; gap: 6px;">
-          <span>💡</span> Answer Key &amp; Explanations
-        </h3>
-        <div id="waiting-explanations-list" style="display: flex; flex-direction: column; gap: 10px; max-height: 220px; overflow-y: auto; padding-right: 4px;"></div>
+        <!-- Unlock Section -->
+        <div id="waiting-unlock-wrap" style="margin-bottom: 15px; text-align: center; border: var(--glass-border); padding: 16px; border-radius: 12px; background: rgba(22, 29, 51, 0.4);">
+          <label style="font-family: var(--font-display); font-size: 0.85rem; color: var(--text-dim); display: block; margin-bottom: 10px; text-transform: uppercase; letter-spacing: 0.5px;">🔓 Enter Coordinator Passcode to Review Answers</label>
+          <div style="display: flex; gap: 8px; justify-content: center; max-width: 320px; margin: 0 auto;">
+            <input type="password" id="waiting-unlock-passcode" class="type-input" placeholder="Enter passcode..." style="padding: 10px 14px; font-size: 0.9rem; flex: 1; min-height: unset; height: 38px;">
+            <button class="btn solid" id="waiting-unlock-btn" style="padding: 10px 16px; font-size: 0.85rem; margin: 0; min-height: unset; height: 38px; display: flex; align-items: center; justify-content: center;">Unlock</button>
+          </div>
+          <div id="waiting-unlock-error" style="color: var(--danger); font-size: 0.8rem; margin-top: 8px; min-height: 1.2em;"></div>
+        </div>
+
+        <div id="waiting-explanations-content" style="display: none;">
+          <h3 style="font-family: var(--font-display); font-size: 0.95rem; color: var(--cyan); margin-bottom: 10px; display: flex; align-items: center; gap: 6px;">
+            <span>💡</span> Answer Key &amp; Explanations
+          </h3>
+          <div id="waiting-explanations-list" style="display: flex; flex-direction: column; gap: 10px; max-height: 220px; overflow-y: auto; padding-right: 4px;"></div>
+        </div>
       </div>
     </div>
   </div>
@@ -720,6 +756,10 @@
             <label>Level 4 Passcode</label>
             <input type="text" id="admin-pass-l4" class="type-input">
           </div>
+          <div class="field">
+            <label>Explanation Passcode (Reveal answer keys to students)</label>
+            <input type="text" id="admin-pass-explanation" class="type-input">
+          </div>
           
           <h3 style="font-family:var(--font-display); font-size:1.1rem; margin-top:24px; margin-bottom:16px; border-top:1px solid rgba(255,255,255,0.06); padding-top:16px; letter-spacing:0.5px;">Level Timers Configuration</h3>
           <div style="display:flex; flex-direction:column; gap:14px; margin-bottom:20px;">
@@ -765,6 +805,12 @@
                 </select>
               </div>
             </div>
+          </div>
+          
+          <h3 style="font-family:var(--font-display); font-size:1.1rem; margin-top:24px; margin-bottom:16px; border-top:1px solid rgba(255,255,255,0.06); padding-top:16px; letter-spacing:0.5px;">Display Configuration</h3>
+          <div style="display:flex; align-items:center; gap:10px; margin-bottom:20px;">
+            <input type="checkbox" id="admin-show-explanations" style="width:20px; height:20px; accent-color:var(--cyan); cursor:pointer;">
+            <label for="admin-show-explanations" style="margin:0; font-family:var(--font-body); font-size:0.95rem; color:var(--text); cursor:pointer;">Show answer keys &amp; explanations to students</label>
           </div>
           
           <div id="admin-pass-success" style="color:var(--success); font-size:0.85rem; margin-bottom:16px; min-height:1.2em;"></div>

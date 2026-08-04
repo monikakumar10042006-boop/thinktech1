@@ -1,6 +1,6 @@
 import { initBackground } from './js/background.js';
 import { buddyPoke } from './js/buddy.js';
-import { submitRegistration, goTo } from './js/ui.js';
+import { submitRegistration, goTo, showLevelIntro } from './js/ui.js';
 import { dismissCheatWarning } from './js/cheating.js';
 import {
   adminLogin,
@@ -22,7 +22,7 @@ import {
   handleQuestionImageSelect,
   handleRemoveQuestionImage
 } from './js/admin.js';
-import { current } from './js/state.js';
+import { current, updateCurrent, loadParticipantsFromStorage } from './js/state.js';
 import { startLiveSync } from './js/sync.js';
 
 window.goTo = goTo;
@@ -32,6 +32,68 @@ window.adminLogin = adminLogin;
 const initializeApp = () => {
   // Start background live synchronization loop
   startLiveSync();
+
+  // Reusable function to setup secure unlock for explanations
+  const setupUnlock = (btnId, inputId, errorId, wrapId, contentId) => {
+    const btn = document.getElementById(btnId);
+    if (btn) {
+      btn.onclick = () => {
+        const pass = document.getElementById(inputId).value;
+        const err = document.getElementById(errorId);
+        import('./js/config.js').then(cfg => {
+          const correct = cfg.getLevelPassword('explanation') || 'reveal999';
+          if (pass === correct) {
+            document.getElementById(wrapId).style.display = 'none';
+            document.getElementById(contentId).style.display = 'block';
+          } else {
+            err.textContent = "Invalid explanation passcode!";
+            setTimeout(() => { err.textContent = ""; }, 3000);
+          }
+        });
+      };
+    }
+  };
+
+  setupUnlock('complete-unlock-btn', 'complete-unlock-passcode', 'complete-unlock-error', 'complete-unlock-wrap', 'complete-explanations-content');
+  setupUnlock('ns-unlock-btn', 'ns-unlock-passcode', 'ns-unlock-error', 'ns-unlock-wrap', 'ns-explanations-content');
+  setupUnlock('waiting-unlock-btn', 'waiting-unlock-passcode', 'waiting-unlock-error', 'waiting-unlock-wrap', 'waiting-explanations-content');
+
+  // Session Recovery for Participant
+  const list = loadParticipantsFromStorage();
+  const isAdmin = sessionStorage.getItem('thinktech_admin_session') === 'true';
+  if (!isAdmin && list.length > 0) {
+    const student = list[0];
+    updateCurrent(student);
+
+    if (student.status === 'disqualified') {
+      goTo('screen-disqualified');
+    } else if (student.status === 'not-selected') {
+      goTo('screen-not-selected');
+      import('./js/quiz.js').then(quiz => {
+        quiz.showNotSelectedScreen(student.stage);
+      });
+    } else if (student.stage === 4 && student.status === 'completed') {
+      goTo('screen-complete');
+      import('./js/quiz.js').then(quiz => {
+        quiz.renderCompleteScreen();
+      });
+    } else if (student.status === 'pending-cutoff') {
+      goTo('screen-waiting');
+      import('./js/quiz.js').then(quiz => {
+        quiz.showWaitingScreen(student.stage);
+      });
+    } else {
+      const currentLevel = student.stage ? student.stage + 1 : 1;
+      if (currentLevel <= 4) {
+        showLevelIntro(currentLevel);
+      } else {
+        goTo('screen-complete');
+        import('./js/quiz.js').then(quiz => {
+          quiz.renderCompleteScreen();
+        });
+      }
+    }
+  }
 
   // 1. Initialize ambient canvas background
   initBackground();

@@ -175,6 +175,9 @@ export function renderPasswordsView() {
   document.getElementById('admin-pass-l2').value = getLevelPassword(2);
   document.getElementById('admin-pass-l3').value = getLevelPassword(3);
   document.getElementById('admin-pass-l4').value = getLevelPassword(4);
+  
+  const expPass = document.getElementById('admin-pass-explanation');
+  if (expPass) expPass.value = getLevelPassword('explanation') || 'reveal999';
 
   document.getElementById('admin-timer-l1').value = getLevelTimer(1);
   document.getElementById('admin-timer-l2').value = getLevelTimer(2);
@@ -195,6 +198,9 @@ export function savePasswordsFromView() {
   const l2Val = document.getElementById('admin-pass-l2').value.trim();
   const l3Val = document.getElementById('admin-pass-l3').value.trim();
   const l4Val = document.getElementById('admin-pass-l4').value.trim();
+  
+  const expPass = document.getElementById('admin-pass-explanation');
+  const expVal = expPass ? expPass.value.trim() : 'reveal999';
 
   const t1Val = document.getElementById('admin-timer-l1').value;
   const t2Val = document.getElementById('admin-timer-l2').value;
@@ -204,7 +210,7 @@ export function savePasswordsFromView() {
   const u1 = document.getElementById('admin-timer-unit-l1');
   const u2 = document.getElementById('admin-timer-unit-l2');
 
-  if (!adminVal || !l1Val || !l2Val || !l3Val || !l4Val || !t1Val || !t2Val || !t3Val || !t4Val) {
+  if (!adminVal || !l1Val || !l2Val || !l3Val || !l4Val || !expVal || !t1Val || !t2Val || !t3Val || !t4Val) {
     showCustomAlert("Passcodes and timers cannot be empty!", "Settings Error", "⚠️");
     return;
   }
@@ -214,6 +220,7 @@ export function savePasswordsFromView() {
   setLevelPassword(2, l2Val);
   setLevelPassword(3, l3Val);
   setLevelPassword(4, l4Val);
+  setLevelPassword('explanation', expVal);
 
   setLevelTimer(1, t1Val);
   setLevelTimer(2, t2Val);

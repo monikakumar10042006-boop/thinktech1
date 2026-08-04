@@ -10,7 +10,8 @@ const defaultPasscodes = {
   1: "12345",
   2: "abcde",
   3: "67890",
-  4: "fghij"
+  4: "fghij",
+  explanation: "reveal999"
 };
 
 let loadedPasscodes = { ...defaultPasscodes };
