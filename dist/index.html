@@ -721,35 +721,49 @@
             <input type="text" id="admin-pass-l4" class="type-input">
           </div>
           
-          <h3 style="font-family:var(--font-display); font-size:1.1rem; margin-top:24px; margin-bottom:12px; border-top:1px solid rgba(255,255,255,0.06); padding-top:16px; letter-spacing:0.5px;">Level Timers Configuration</h3>
-          <div class="field" style="display:grid; grid-template-columns:1fr 1fr; gap:12px;">
-            <div>
-              <label>Level 1 Question Timer</label>
-              <div style="display:flex; gap:6px;">
-                <input type="number" id="admin-timer-l1" class="type-input" min="1" max="600" style="flex:1;">
-                <select id="admin-timer-unit-l1" class="type-input" style="width:90px; padding:6px; background: rgba(8, 11, 20, 0.8);">
+          <h3 style="font-family:var(--font-display); font-size:1.1rem; margin-top:24px; margin-bottom:16px; border-top:1px solid rgba(255,255,255,0.06); padding-top:16px; letter-spacing:0.5px;">Level Timers Configuration</h3>
+          <div style="display:flex; flex-direction:column; gap:14px; margin-bottom:20px;">
+            <!-- Level 1 -->
+            <div style="display:flex; justify-content:space-between; align-items:center; gap:16px;">
+              <label style="margin:0; font-family:var(--font-display); font-weight:600; font-size:0.85rem; color:var(--text-dim); text-transform:uppercase;">Level 1 Question Timer</label>
+              <div style="display:flex; gap:8px; width:200px;">
+                <input type="number" id="admin-timer-l1" class="type-input" min="1" max="600" style="flex:1; text-align:center;">
+                <select id="admin-timer-unit-l1" class="type-input" style="width:90px; padding:14px 10px; background: rgba(8, 11, 20, 0.8);">
                   <option value="sec">Sec</option>
                   <option value="min">Min</option>
                 </select>
               </div>
             </div>
-            <div>
-              <label>Level 2 Question Timer</label>
-              <div style="display:flex; gap:6px;">
-                <input type="number" id="admin-timer-l2" class="type-input" min="1" max="600" style="flex:1;">
-                <select id="admin-timer-unit-l2" class="type-input" style="width:90px; padding:6px; background: rgba(8, 11, 20, 0.8);">
+            <!-- Level 2 -->
+            <div style="display:flex; justify-content:space-between; align-items:center; gap:16px;">
+              <label style="margin:0; font-family:var(--font-display); font-weight:600; font-size:0.85rem; color:var(--text-dim); text-transform:uppercase;">Level 2 Question Timer</label>
+              <div style="display:flex; gap:8px; width:200px;">
+                <input type="number" id="admin-timer-l2" class="type-input" min="1" max="600" style="flex:1; text-align:center;">
+                <select id="admin-timer-unit-l2" class="type-input" style="width:90px; padding:14px 10px; background: rgba(8, 11, 20, 0.8);">
                   <option value="sec">Sec</option>
                   <option value="min">Min</option>
                 </select>
               </div>
             </div>
-            <div>
-              <label>Level 3 (minutes per qn)</label>
-              <input type="number" id="admin-timer-l3" class="type-input" min="1" max="180">
+            <!-- Level 3 -->
+            <div style="display:flex; justify-content:space-between; align-items:center; gap:16px;">
+              <label style="margin:0; font-family:var(--font-display); font-weight:600; font-size:0.85rem; color:var(--text-dim); text-transform:uppercase;">Level 3 (Minutes Per Qn)</label>
+              <div style="display:flex; gap:8px; width:200px;">
+                <input type="number" id="admin-timer-l3" class="type-input" min="1" max="180" style="flex:1; text-align:center;">
+                <select class="type-input" disabled style="width:90px; padding:14px 10px; background: rgba(8, 11, 20, 0.4); opacity: 0.6; cursor: not-allowed;">
+                  <option value="min">Min</option>
+                </select>
+              </div>
             </div>
-            <div>
-              <label>Level 4 (total minutes)</label>
-              <input type="number" id="admin-timer-l4" class="type-input" min="1" max="180">
+            <!-- Level 4 -->
+            <div style="display:flex; justify-content:space-between; align-items:center; gap:16px;">
+              <label style="margin:0; font-family:var(--font-display); font-weight:600; font-size:0.85rem; color:var(--text-dim); text-transform:uppercase;">Level 4 (Total Minutes)</label>
+              <div style="display:flex; gap:8px; width:200px;">
+                <input type="number" id="admin-timer-l4" class="type-input" min="1" max="180" style="flex:1; text-align:center;">
+                <select class="type-input" disabled style="width:90px; padding:14px 10px; background: rgba(8, 11, 20, 0.4); opacity: 0.6; cursor: not-allowed;">
+                  <option value="min">Min</option>
+                </select>
+              </div>
             </div>
           </div>
           
