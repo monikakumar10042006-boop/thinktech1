@@ -23,12 +23,16 @@ import {
   handleRemoveQuestionImage
 } from './js/admin.js';
 import { current } from './js/state.js';
+import { startLiveSync } from './js/sync.js';
 
 window.goTo = goTo;
 window.openAdmin = openAdmin;
 window.adminLogin = adminLogin;
 
 document.addEventListener('DOMContentLoaded', () => {
+  // Start background live synchronization loop
+  startLiveSync();
+
   // 1. Initialize ambient canvas background
   initBackground();
 

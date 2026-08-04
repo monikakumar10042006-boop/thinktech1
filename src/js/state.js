@@ -82,9 +82,29 @@ export function updateAntiCheatActive(val) {
 }
 
 export function saveParticipants(newVal) {
+  const nowStr = new Date().toISOString();
   if (newVal !== undefined && Array.isArray(newVal)) {
+    newVal.forEach(newP => {
+      const oldP = participants.find(p => p.id === newP.id);
+      if (!oldP) {
+        newP.lastUpdatedAt = nowStr;
+      } else {
+        const oldCompare = { ...oldP, lastUpdatedAt: null };
+        const newCompare = { ...newP, lastUpdatedAt: null };
+        if (JSON.stringify(oldCompare) !== JSON.stringify(newCompare)) {
+          newP.lastUpdatedAt = nowStr;
+        }
+      }
+    });
     participants.length = 0;
     participants.push(...newVal);
+  }
+  if (current) {
+    current.lastUpdatedAt = nowStr;
+    const idx = participants.findIndex(p => p.id === current.id);
+    if (idx >= 0) {
+      participants[idx] = { ...current };
+    }
   }
   if (!storageAvailable) return;
   try {
@@ -96,6 +116,7 @@ export function saveParticipants(newVal) {
 
 export function saveParticipantRecord(p) {
   if (!p || !p.id) return;
+  p.lastUpdatedAt = new Date().toISOString();
   const list = loadParticipantsFromStorage();
   const idx = list.findIndex(item => item.id === p.id);
   if (idx >= 0) {

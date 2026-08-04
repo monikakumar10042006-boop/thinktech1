@@ -6,7 +6,12 @@
   "scripts": {
     "dev": "vite --port 3000 --strictPort",
     "build": "node ./node_modules/vite/bin/vite.js build",
+    "start": "node server.js",
     "preview": "vite preview --port 3000 --strictPort"
+  },
+  "dependencies": {
+    "cors": "^2.8.5",
+    "express": "^4.19.2"
   },
   "devDependencies": {
     "vite": "^5.0.0"
