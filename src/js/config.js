@@ -7,10 +7,10 @@ export const MAX_WARNINGS = 1; // 1 warning allowed; 2nd violation triggers auto
 // Default passcodes
 const defaultPasscodes = {
   admin: "gtec1234567",
-  1: "12345",
-  2: "abcde",
-  3: "67890",
-  4: "fghij",
+  1: "python",
+  2: "java",
+  3: "frontend",
+  4: "backend",
   explanation: "reveal999"
 };
 
@@ -21,6 +21,13 @@ function loadPasscodes() {
     const stored = localStorage.getItem(PASSWORDS_STORAGE_KEY);
     if (stored) {
       loadedPasscodes = JSON.parse(stored);
+      
+      // Auto-upgrade from old default values to the new requested values
+      if (loadedPasscodes[1] === "12345") loadedPasscodes[1] = "python";
+      if (loadedPasscodes[2] === "abcde") loadedPasscodes[2] = "java";
+      if (loadedPasscodes[3] === "67890") loadedPasscodes[3] = "frontend";
+      if (loadedPasscodes[4] === "fghij") loadedPasscodes[4] = "backend";
+      savePasscodes();
     }
   } catch (e) {
     // fallback to defaults
