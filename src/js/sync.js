@@ -1,5 +1,5 @@
 import { STORAGE_KEY, PASSWORDS_STORAGE_KEY, TIMERS_STORAGE_KEY, TIMER_UNITS_STORAGE_KEY } from './config.js';
-import { CONCLUDED_ROUNDS_KEY } from './state.js';
+import { CONCLUDED_ROUNDS_KEY, current, updateCurrent, saveParticipants } from './state.js';
 import { QUESTIONS_STORAGE_KEY } from './questions.js';
 
 let syncInterval = null;
@@ -14,7 +14,18 @@ async function performSync() {
 
     // 1. Gather local data
     const localParticipantsRaw = localStorage.getItem(STORAGE_KEY) || "[]";
-    const participants = JSON.parse(localParticipantsRaw);
+    let participants = JSON.parse(localParticipantsRaw);
+
+    // Self-healing: If current participant is active in memory but missing from localStorage, restore them
+    if (participants.length === 0 && current && current.id) {
+      participants = [current];
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(participants));
+    }
+
+    // Restore current participant in memory if page was refreshed
+    if (!isAdmin && !current && participants.length > 0) {
+      updateCurrent(participants[0]);
+    }
 
     const payload = {
       isAdmin,
@@ -50,7 +61,6 @@ async function performSync() {
       const serverRaw = JSON.stringify(serverDataObj);
       const localRaw = localStorage.getItem(key) || "{}";
       
-      // Compare normalized parsed objects to prevent key ordering differences
       const serverParsed = JSON.parse(serverRaw);
       const localParsed = JSON.parse(localRaw);
 
@@ -61,14 +71,41 @@ async function performSync() {
       return false;
     }
 
-    // 3. Update participants list
+    // 3. Update participants list (with safe client-side merging to prevent wiping)
     if (Array.isArray(data.participants)) {
-      const serverParticipantsRaw = JSON.stringify(data.participants);
+      // Merge local changes that haven't reached the server yet to prevent race conditions
+      const merged = [...data.participants];
+      participants.forEach(localP => {
+        if (!localP || !localP.id) return;
+        const exists = merged.some(p => p.id === localP.id);
+        if (!exists) {
+          merged.push(localP);
+        } else {
+          // If it exists in both, keep the one with the latest timestamp
+          const serverPIdx = merged.findIndex(p => p.id === localP.id);
+          const serverP = merged[serverPIdx];
+          const localTime = localP.lastUpdatedAt ? new Date(localP.lastUpdatedAt).getTime() : 0;
+          const serverTime = serverP.lastUpdatedAt ? new Date(serverP.lastUpdatedAt).getTime() : 0;
+          if (localTime > serverTime) {
+            merged[serverPIdx] = localP;
+          }
+        }
+      });
+
+      const serverParticipantsRaw = JSON.stringify(merged);
       const localParsed = JSON.parse(localParticipantsRaw);
       
-      if (JSON.stringify(data.participants) !== JSON.stringify(localParsed)) {
+      if (JSON.stringify(merged) !== JSON.stringify(localParsed)) {
         localStorage.setItem(STORAGE_KEY, serverParticipantsRaw);
         hasChanges = true;
+        
+        // If current is in the merged list, update it in memory too
+        if (current) {
+          const freshCurrent = merged.find(p => p.id === current.id);
+          if (freshCurrent && JSON.stringify(freshCurrent) !== JSON.stringify(current)) {
+            updateCurrent(freshCurrent);
+          }
+        }
       }
     }
 
@@ -80,7 +117,6 @@ async function performSync() {
       if (data.timerUnits && updateLocalStorageIfChanged(TIMER_UNITS_STORAGE_KEY, data.timerUnits)) hasChanges = true;
       if (data.questions && updateLocalStorageIfChanged(QUESTIONS_STORAGE_KEY, data.questions)) hasChanges = true;
     } else {
-      // If admin, we only pull updates for concluded rounds (in case it changes elsewhere, though admin is single source)
       if (data.concluded && updateLocalStorageIfChanged(CONCLUDED_ROUNDS_KEY, data.concluded)) hasChanges = true;
     }
 

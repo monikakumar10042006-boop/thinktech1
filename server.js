@@ -140,6 +140,14 @@ app.post('/api/sync', (req, res) => {
   });
 });
 
+// Clear All Data Endpoint
+app.post('/api/clear', (req, res) => {
+  serverParticipants = [];
+  persistData();
+  console.log("Server participants database cleared by admin request.");
+  res.json({ ok: true });
+});
+
 // Serve frontend assets in production
 app.use(express.static(path.join(__dirname, 'dist')));
 

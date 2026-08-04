@@ -606,6 +606,11 @@ export async function clearAllData() {
   if (!confirmed) return;
   saveParticipants([]);
   renderAdminTable();
+  try {
+    await fetch('/api/clear', { method: 'POST' });
+  } catch (e) {
+    console.error("Failed to clear server data:", e);
+  }
 }
 
 // ==========================================
