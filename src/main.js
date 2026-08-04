@@ -24,10 +24,15 @@ import {
 } from './js/admin.js';
 import { current, updateCurrent, loadParticipantsFromStorage } from './js/state.js';
 import { startLiveSync } from './js/sync.js';
+import { submitTypedAnswer, submitLevel3Question, submitL34 } from './js/quiz.js';
 
 window.goTo = goTo;
 window.openAdmin = openAdmin;
 window.adminLogin = adminLogin;
+window.buddyPoke = buddyPoke;
+window.submitTypedAnswer = submitTypedAnswer;
+window.submitLevel3Question = submitLevel3Question;
+window.submitL34 = submitL34;
 
 const initializeApp = () => {
   // Start background live synchronization loop
