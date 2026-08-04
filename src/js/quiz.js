@@ -101,15 +101,16 @@ export function scoreL4Answer(answer, answerKey, maxMarks) {
 // ==========================================
 // MCQ / TEXT QUIZ FLOW (L1 & L2)
 // ==========================================
-export function startMCQLevel(levelKey, questionSet, secondsPerQ) {
+export function startMCQLevel(levelKey, questionSet, totalSeconds) {
   updateCurrentLevelKey(levelKey);
   updateCurrentQuestionSet(questionSet);
   updateCurrentQIndex(0);
   goTo('screen-quiz');
-  renderMCQQuestion(secondsPerQ);
+  renderMCQQuestion();
+  startMCQOverallTimer(totalSeconds);
 }
 
-export function renderMCQQuestion(secondsPerQ) {
+export function renderMCQQuestion() {
   const q = currentQuestionSet[currentQIndex];
   
   // Set up screen-specific Back button target: back to the level intro screen
@@ -156,7 +157,6 @@ export function renderMCQQuestion(secondsPerQ) {
     typeFeedback.textContent = "";
     typeFeedback.className = 'type-feedback';
     setTimeout(() => typeInput.focus(), 30);
-    startCircleTimer(secondsPerQ, () => submitTypedAnswer(true));
   } else {
     typeWrap.style.display = 'none';
     optsEl.style.display = 'grid';
@@ -170,12 +170,10 @@ export function renderMCQQuestion(secondsPerQ) {
       b.onclick = () => selectMCQAnswer(idx, correctIdx);
       optsEl.appendChild(b);
     });
-    startCircleTimer(secondsPerQ, () => selectMCQAnswer(-1, correctIdx));
   }
 }
 
 export function submitTypedAnswer(timedOut) {
-  clearInterval(quizTimer);
   const q = currentQuestionSet[currentQIndex];
   const typeInput = document.getElementById('quiz-type-input');
   const typeFeedback = document.getElementById('quiz-type-feedback');
@@ -207,7 +205,6 @@ export function submitTypedAnswer(timedOut) {
 }
 
 export function selectMCQAnswer(chosenIdx, correctIdx) {
-  clearInterval(quizTimer);
   const q = currentQuestionSet[currentQIndex];
   const buttons = document.querySelectorAll('#quiz-options .opt-btn');
   buttons.forEach((b, idx) => {
@@ -240,6 +237,7 @@ export function selectMCQAnswer(chosenIdx, correctIdx) {
 function advanceMCQ() {
   updateCurrentQIndex(currentQIndex + 1);
   if (currentQIndex >= currentQuestionSet.length) {
+    clearInterval(quizTimer);
     if (currentLevelKey === 'l1') {
       current.stage = Math.max(current.stage || 0, 1);
       current.status = "pending-cutoff";
@@ -253,8 +251,7 @@ function advanceMCQ() {
     }
     return;
   }
-  const secondsPerQ = currentLevelKey === 'l1' ? 25 : 30;
-  renderMCQQuestion(secondsPerQ);
+  renderMCQQuestion();
 }
 
 // ==========================================
@@ -448,20 +445,28 @@ export function showWaitingScreen(levelNum) {
 }
 
 // Circle Countdown Timer helper
-function startCircleTimer(seconds, onExpire) {
-  updateQuizTotalTime(seconds);
-  updateQuizTimeLeft(seconds);
+function startMCQOverallTimer(totalSeconds) {
+  updateQuizTotalTime(totalSeconds);
+  updateQuizTimeLeft(totalSeconds);
   const circle = document.getElementById('timer-circle');
   const numEl = document.getElementById('timer-num');
   if (!circle || !numEl) return;
   const R = 24, C = 2 * Math.PI * R;
   circle.style.strokeDasharray = C;
   
+  numEl.style.fontSize = '12px';
+
+  function formatTime(sec) {
+    const m = Math.floor(sec / 60);
+    const s = sec % 60;
+    return `${m}:${s.toString().padStart(2, '0')}`;
+  }
+
   function updateCircle() {
     const frac = Math.max(quizTimeLeft, 0) / quizTotalTime;
     circle.style.strokeDashoffset = C * (1 - frac);
-    circle.style.stroke = quizTimeLeft <= 5 ? 'var(--danger)' : (quizTimeLeft <= quizTotalTime * 0.4 ? 'var(--amber)' : 'var(--cyan)');
-    numEl.textContent = Math.max(quizTimeLeft, 0);
+    circle.style.stroke = quizTimeLeft <= 10 ? 'var(--danger)' : (quizTimeLeft <= quizTotalTime * 0.4 ? 'var(--amber)' : 'var(--cyan)');
+    numEl.textContent = formatTime(Math.max(quizTimeLeft, 0));
   }
 
   updateCircle();
@@ -471,10 +476,41 @@ function startCircleTimer(seconds, onExpire) {
     updateCircle();
     if (quizTimeLeft <= 0) {
       clearInterval(timer);
-      onExpire();
+      expireMCQLevel();
     }
   }, 1000);
   updateQuizTimer(timer);
+}
+
+export function expireMCQLevel() {
+  clearInterval(quizTimer);
+  const ansKey = currentLevelKey === 'l1' ? 'l1Answers' : 'l2Answers';
+  if (!current[ansKey]) current[ansKey] = [];
+
+  // Fill remaining as timed out
+  for (let i = currentQIndex; i < currentQuestionSet.length; i++) {
+    const q = currentQuestionSet[i];
+    current[ansKey][i] = {
+      question: q.question,
+      emoji: q.emoji || "",
+      userAnswer: "(Timed Out)",
+      correctAnswer: q.answer,
+      isCorrect: false,
+      explanation: q.explanation || ""
+    };
+  }
+
+  if (currentLevelKey === 'l1') {
+    current.stage = Math.max(current.stage || 0, 1);
+    current.status = "pending-cutoff";
+    saveParticipants();
+    showWaitingScreen(1);
+  } else if (currentLevelKey === 'l2') {
+    current.stage = Math.max(current.stage || 0, 2);
+    current.status = "pending-cutoff";
+    saveParticipants();
+    showWaitingScreen(2);
+  }
 }
 
 // ==========================================

@@ -127,28 +127,28 @@ export function showLevelIntro(levelNum) {
       tag: "LEVEL 1",
       title: "Emoji Decode",
       desc: "Read the emoji clue and click the correct meaning.",
-      rules: [getQuestions('l1').length + " questions", getLevelTimer(1) + " " + u1 + " each", "Answer early to move on instantly"],
+      rules: [getQuestions('l1').length + " questions", getLevelTimer(1) + " " + u1 + " total duration", "Manage your time across all questions"],
       action: () => startMCQLevel('l1', shuffleArray(getQuestions('l1')), getLevelTimerSeconds(1))
     },
     2: {
       tag: "LEVEL 2",
       title: "Guess who am I?",
       desc: "Read the riddle and type who — or what — is being described.",
-      rules: [getQuestions('l2').length + " questions", getLevelTimer(2) + " " + u2 + " each", "Answer early to move on instantly"],
+      rules: [getQuestions('l2').length + " questions", getLevelTimer(2) + " " + u2 + " total duration", "Manage your time across all questions"],
       action: () => startMCQLevel('l2', shuffleArray(getQuestions('l2')), getLevelTimerSeconds(2))
     },
     3: {
       tag: "LEVEL 3",
       title: "Code Challenge",
       desc: "5 questions, 3 tasks each — type the import, fix the bug, predict the output.",
-      rules: ["5 questions (order shuffled)", getLevelTimer(3) + " minutes per question", (getLevelTimer(3) * 5) + " minutes total"],
+      rules: ["5 questions (order shuffled)", getLevelTimer(3) + " minutes total duration", "Manage your time across all questions"],
       action: () => startLevel3()
     },
     4: {
       tag: "LEVEL 4",
       title: "Final Round",
       desc: "Three logic puzzles. Give it everything.",
-      rules: ["3 questions (order shuffled)", getLevelTimer(4) + " minutes per question", "Submit early to move to the next puzzle"],
+      rules: ["3 questions (order shuffled)", getLevelTimer(4) + " minutes total duration", "Submit early to move to the next puzzle"],
       action: () => startL34Level()
     }
   }[levelNum];
