@@ -1,0 +1,69 @@
+@import url('https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;700&family=Fredoka:wght@500;600;700&display=swap');
+
+:root {
+  --bg-deep: #080b14;
+  --bg-panel: rgba(16, 21, 38, 0.7);
+  --bg-panel-2: rgba(22, 29, 51, 0.8);
+  --line: rgba(36, 44, 71, 0.6);
+  --cyan: #5eead4;
+  --violet: #8b7cf6;
+  --amber: #fbbf24;
+  --danger: #f87171;
+  --success: #4ade80;
+  --text: #e8ecf7;
+  --text-dim: #8b93b0;
+  --font-display: 'Space Grotesk', sans-serif;
+  --font-body: 'Inter', sans-serif;
+  --font-mono: 'JetBrains Mono', monospace;
+  --glass-border: 1px solid rgba(255, 255, 255, 0.08);
+  --glass-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.37);
+  --glow-cyan: 0 0 15px rgba(94, 234, 212, 0.4);
+  --glow-violet: 0 0 15px rgba(139, 124, 246, 0.4);
+}
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html, body {
+  height: 100%;
+  width: 100%;
+}
+
+body {
+  font-family: var(--font-body);
+  background: radial-gradient(circle at 15% -10%, #1a2244 0%, var(--bg-deep) 45%),
+              radial-gradient(circle at 110% 110%, #1a1030 0%, var(--bg-deep) 50%),
+              var(--bg-deep);
+  color: var(--text);
+  overflow: hidden;
+  -webkit-user-select: none;
+  user-select: none;
+  position: relative;
+}
+
+/* Background grid effect */
+.circuit-bg {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 0;
+  opacity: 0.03;
+  pointer-events: none;
+  background-image: radial-gradient(var(--cyan) 1px, transparent 1px);
+  background-size: 24px 24px;
+}
+
+canvas#ai-net-bg {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 0;
+  pointer-events: none;
+}
