@@ -11,10 +11,10 @@ const defaultPasscodes = {
   2: "abcde",
   3: "67890",
   4: "fghij",
-  exp1: "rev101",
-  exp2: "rev202",
-  exp3: "rev303",
-  exp4: "rev404"
+  exp1: "python",
+  exp2: "java",
+  exp3: "frontend",
+  exp4: "backend"
 };
 
 let loadedPasscodes = { ...defaultPasscodes };
