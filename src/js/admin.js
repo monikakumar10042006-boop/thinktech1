@@ -208,24 +208,19 @@ export function renderPasswordsView() {
 }
 
 export function savePasswordsFromView() {
-  const adminVal = document.getElementById('admin-pass-admin').value.trim();
-  const l1Val = document.getElementById('admin-pass-l1').value.trim();
-  const l2Val = document.getElementById('admin-pass-l2').value.trim();
-  const l3Val = document.getElementById('admin-pass-l3').value.trim();
-  const l4Val = document.getElementById('admin-pass-l4').value.trim();
+  const adminVal = document.getElementById('admin-pass-admin').value.trim() || getAdminPassword();
+  const l1Val = document.getElementById('admin-pass-l1').value.trim() || getLevelPassword(1);
+  const l2Val = document.getElementById('admin-pass-l2').value.trim() || getLevelPassword(2);
+  const l3Val = document.getElementById('admin-pass-l3').value.trim() || getLevelPassword(3);
+  const l4Val = document.getElementById('admin-pass-l4').value.trim() || getLevelPassword(4);
 
-  const t1Val = document.getElementById('admin-timer-l1').value;
-  const t2Val = document.getElementById('admin-timer-l2').value;
-  const t3Val = document.getElementById('admin-timer-l3').value;
-  const t4Val = document.getElementById('admin-timer-l4').value;
+  const t1Val = document.getElementById('admin-timer-l1').value || getLevelTimer(1);
+  const t2Val = document.getElementById('admin-timer-l2').value || getLevelTimer(2);
+  const t3Val = document.getElementById('admin-timer-l3').value || getLevelTimer(3);
+  const t4Val = document.getElementById('admin-timer-l4').value || getLevelTimer(4);
 
   const u1 = document.getElementById('admin-timer-unit-l1');
   const u2 = document.getElementById('admin-timer-unit-l2');
-
-  if (!adminVal || !l1Val || !l2Val || !l3Val || !l4Val || !t1Val || !t2Val || !t3Val || !t4Val) {
-    showCustomAlert("Passcodes and timers cannot be empty!", "Settings Error", "⚠️");
-    return;
-  }
 
   setAdminPassword(adminVal);
   setLevelPassword(1, l1Val);

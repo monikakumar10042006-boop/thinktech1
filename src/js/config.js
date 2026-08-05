@@ -68,10 +68,10 @@ export function getAllPasswords() {
 export const TIMERS_STORAGE_KEY = "thinktech_timers_v1";
 
 const defaultTimers = {
-  1: 25,  // Level 1: 25 seconds per question
-  2: 30,  // Level 2: 30 seconds per question
-  3: 4,   // Level 3: 4 minutes per question
-  4: 10   // Level 4: 10 minutes per question
+  1: 7,
+  2: 10,
+  3: 20,
+  4: 30
 };
 
 let loadedTimers = { ...defaultTimers };
@@ -109,8 +109,8 @@ export function setLevelTimer(levelNum, val) {
 export const TIMER_UNITS_STORAGE_KEY = "thinktech_timer_units_v1";
 
 const defaultTimerUnits = {
-  1: "sec",
-  2: "sec"
+  1: "min",
+  2: "min"
 };
 
 let loadedTimerUnits = { ...defaultTimerUnits };
