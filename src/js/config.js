@@ -7,10 +7,10 @@ export const MAX_WARNINGS = 1; // 1 warning allowed; 2nd violation triggers auto
 // Default passcodes
 const defaultPasscodes = {
   admin: "admin123",
-  1: "python",
-  2: "java",
-  3: "frontend",
-  4: "backend",
+  1: "12345",
+  2: "abcde",
+  3: "67890",
+  4: "fghij",
   exp1: "rev101",
   exp2: "rev202",
   exp3: "rev303",
