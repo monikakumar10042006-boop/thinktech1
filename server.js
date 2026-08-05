@@ -164,13 +164,24 @@ app.post('/api/clear', (req, res) => {
   res.json({ ok: true });
 });
 
-// Serve frontend assets in production
-app.use(express.static(path.join(__dirname, 'dist')));
+// Serve frontend assets in production with no-cache headers for HTML files
+app.use(express.static(path.join(__dirname, 'dist'), {
+  setHeaders: (res, filePath) => {
+    if (filePath.endsWith('.html')) {
+      res.setHeader('Cache-Control', 'no-cache, no-store, must-revalidate');
+      res.setHeader('Pragma', 'no-cache');
+      res.setHeader('Expires', '0');
+    }
+  }
+}));
 
 // SPA route fallback
 app.get('*', (req, res) => {
   const indexFile = path.join(__dirname, 'dist', 'index.html');
   if (fs.existsSync(indexFile)) {
+    res.setHeader('Cache-Control', 'no-cache, no-store, must-revalidate');
+    res.setHeader('Pragma', 'no-cache');
+    res.setHeader('Expires', '0');
     res.sendFile(indexFile);
   } else {
     res.status(404).send("Application dist folder not built yet.");
