@@ -306,6 +306,34 @@ export function checkLevelQualification(levelNum) {
     const nsWrap = document.getElementById('ns-explanations-wrap');
     const nsList = document.getElementById('ns-explanations-list');
     if (nsWrap && nsList) {
+      // Dynamic passcode unlock setup using the current level's passcode
+      const nsUnlockWrap = document.getElementById('ns-unlock-wrap');
+      const nsContent = document.getElementById('ns-explanations-content');
+      if (nsUnlockWrap && nsContent) {
+        nsUnlockWrap.style.display = 'block';
+        nsContent.style.display = 'none';
+        document.getElementById('ns-unlock-passcode').value = "";
+        document.getElementById('ns-unlock-error').textContent = "";
+        
+        const unlockBtn = document.getElementById('ns-unlock-btn');
+        if (unlockBtn) {
+          unlockBtn.onclick = () => {
+            const pass = document.getElementById('ns-unlock-passcode').value.trim();
+            const err = document.getElementById('ns-unlock-error');
+            import('./config.js').then(cfg => {
+              const correct = cfg.getLevelPassword(levelNum);
+              if (pass === correct) {
+                nsUnlockWrap.style.display = 'none';
+                nsContent.style.display = 'block';
+              } else {
+                err.textContent = "Invalid explanation passcode!";
+                setTimeout(() => { err.textContent = ""; }, 3000);
+              }
+            });
+          };
+        }
+      }
+
       const levelKey = `l${levelNum}`;
       const levelQuestions = getQuestions(levelKey) || [];
       const studentAnswers = (current && current[`${levelKey}Answers`]) || [];
@@ -373,6 +401,34 @@ export function showWaitingScreen(levelNum) {
   const wrap = document.getElementById('waiting-explanations-wrap');
   const listEl = document.getElementById('waiting-explanations-list');
   if (wrap && listEl) {
+    // Dynamic passcode unlock setup using the current level's passcode
+    const waitUnlockWrap = document.getElementById('waiting-unlock-wrap');
+    const waitContent = document.getElementById('waiting-explanations-content');
+    if (waitUnlockWrap && waitContent) {
+      waitUnlockWrap.style.display = 'block';
+      waitContent.style.display = 'none';
+      document.getElementById('waiting-unlock-passcode').value = "";
+      document.getElementById('waiting-unlock-error').textContent = "";
+      
+      const unlockBtn = document.getElementById('waiting-unlock-btn');
+      if (unlockBtn) {
+        unlockBtn.onclick = () => {
+          const pass = document.getElementById('waiting-unlock-passcode').value.trim();
+          const err = document.getElementById('waiting-unlock-error');
+          import('./config.js').then(cfg => {
+            const correct = cfg.getLevelPassword(levelNum);
+            if (pass === correct) {
+              waitUnlockWrap.style.display = 'none';
+              waitContent.style.display = 'block';
+            } else {
+              err.textContent = "Invalid explanation passcode!";
+              setTimeout(() => { err.textContent = ""; }, 3000);
+            }
+          });
+        };
+      }
+    }
+
     const levelKey = `l${levelNum}`;
     const levelQuestions = getQuestions(levelKey) || [];
     const studentAnswers = (current && current[`${levelKey}Answers`]) || [];
@@ -877,6 +933,34 @@ export function finishCompetition() {
   const compWrap = document.getElementById('complete-explanations-wrap');
   const compList = document.getElementById('complete-explanations-list');
   if (compWrap && compList) {
+    // Dynamic passcode unlock setup using Level 4 passcode
+    const compUnlockWrap = document.getElementById('complete-unlock-wrap');
+    const compContent = document.getElementById('complete-explanations-content');
+    if (compUnlockWrap && compContent) {
+      compUnlockWrap.style.display = 'block';
+      compContent.style.display = 'none';
+      document.getElementById('complete-unlock-passcode').value = "";
+      document.getElementById('complete-unlock-error').textContent = "";
+      
+      const unlockBtn = document.getElementById('complete-unlock-btn');
+      if (unlockBtn) {
+        unlockBtn.onclick = () => {
+          const pass = document.getElementById('complete-unlock-passcode').value.trim();
+          const err = document.getElementById('complete-unlock-error');
+          import('./config.js').then(cfg => {
+            const correct = cfg.getLevelPassword(4);
+            if (pass === correct) {
+              compUnlockWrap.style.display = 'none';
+              compContent.style.display = 'block';
+            } else {
+              err.textContent = "Invalid explanation passcode!";
+              setTimeout(() => { err.textContent = ""; }, 3000);
+            }
+          });
+        };
+      }
+    }
+
     compWrap.style.display = 'block';
     let html = "";
 
@@ -962,4 +1046,8 @@ export function computeTotal(p) {
   const l3 = typeof p.l3Score === 'number' ? p.l3Score : 0;
   const l4 = typeof p.l4Marks === 'number' ? p.l4Marks : 0;
   return p.l1Score + p.l2Score + l3 + l4;
+}
+
+export function renderCompleteScreen() {
+  finishCompetition();
 }

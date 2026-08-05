@@ -38,31 +38,6 @@ const initializeApp = () => {
   // Start background live synchronization loop
   startLiveSync();
 
-  // Reusable function to setup secure unlock for explanations
-  const setupUnlock = (btnId, inputId, errorId, wrapId, contentId) => {
-    const btn = document.getElementById(btnId);
-    if (btn) {
-      btn.onclick = () => {
-        const pass = document.getElementById(inputId).value;
-        const err = document.getElementById(errorId);
-        import('./js/config.js').then(cfg => {
-          const correct = cfg.getLevelPassword('explanation') || 'reveal999';
-          if (pass === correct) {
-            document.getElementById(wrapId).style.display = 'none';
-            document.getElementById(contentId).style.display = 'block';
-          } else {
-            err.textContent = "Invalid explanation passcode!";
-            setTimeout(() => { err.textContent = ""; }, 3000);
-          }
-        });
-      };
-    }
-  };
-
-  setupUnlock('complete-unlock-btn', 'complete-unlock-passcode', 'complete-unlock-error', 'complete-unlock-wrap', 'complete-explanations-content');
-  setupUnlock('ns-unlock-btn', 'ns-unlock-passcode', 'ns-unlock-error', 'ns-unlock-wrap', 'ns-explanations-content');
-  setupUnlock('waiting-unlock-btn', 'waiting-unlock-passcode', 'waiting-unlock-error', 'waiting-unlock-wrap', 'waiting-explanations-content');
-
   // Session Recovery for Participant
   const list = loadParticipantsFromStorage();
   const isAdmin = sessionStorage.getItem('thinktech_admin_session') === 'true';
