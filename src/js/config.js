@@ -22,8 +22,11 @@ function loadPasscodes() {
     if (stored) {
       loadedPasscodes = { ...defaultPasscodes, ...JSON.parse(stored) };
       
-      // Auto-upgrade old defaults so they can log in
-      if (loadedPasscodes.admin === "gtec1234567") loadedPasscodes.admin = "admin123";
+      // One-time auto-upgrade old defaults so they can log in
+      if (!localStorage.getItem('thinktech_migrated_admin')) {
+        if (loadedPasscodes.admin === "gtec1234567") loadedPasscodes.admin = "admin123";
+        localStorage.setItem('thinktech_migrated_admin', 'true');
+      }
       
       savePasscodes();
     }
@@ -125,9 +128,12 @@ function loadTimerUnits() {
     if (stored) {
       loadedTimerUnits = { ...defaultTimerUnits, ...JSON.parse(stored) };
       
-      // Auto-upgrade old defaults from sec to min
-      if (loadedTimerUnits[1] === "sec") loadedTimerUnits[1] = "min";
-      if (loadedTimerUnits[2] === "sec") loadedTimerUnits[2] = "min";
+      // One-time auto-upgrade old defaults from sec to min
+      if (!localStorage.getItem('thinktech_migrated_units')) {
+        if (loadedTimerUnits[1] === "sec") loadedTimerUnits[1] = "min";
+        if (loadedTimerUnits[2] === "sec") loadedTimerUnits[2] = "min";
+        localStorage.setItem('thinktech_migrated_units', 'true');
+      }
       
       saveTimerUnits();
     }

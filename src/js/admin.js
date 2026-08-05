@@ -940,8 +940,18 @@ export async function exportWinnersCSV() {
 
 export function startAdminLiveRefresh() {
   stopAdminLiveRefresh();
-  renderAdminTable();
-  adminLiveInterval = setInterval(renderAdminTable, 3000);
+  adminLiveInterval = setInterval(() => {
+    // only if admin panel is active
+    if (!document.getElementById('screen-admin-panel').classList.contains('active')) return;
+    
+    renderAdminTable();
+    
+    if (adminView === 'questions') {
+      renderQuestionsView();
+    }
+    // We explicitly DO NOT auto-refresh adminView === 'passwords' 
+    // to prevent overwriting the user's inputs while they are trying to edit them.
+  }, 2000);
 }
 
 export function stopAdminLiveRefresh() {
