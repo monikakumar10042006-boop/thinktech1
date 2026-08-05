@@ -320,7 +320,7 @@ export function checkLevelQualification(levelNum) {
           unlockBtn.onclick = () => {
             const pass = document.getElementById('ns-unlock-passcode').value.trim();
             const err = document.getElementById('ns-unlock-error');
-            const correct = getExplanationPassword();
+            const correct = getExplanationPassword(levelNum);
             if (pass === correct) {
               nsUnlockWrap.style.display = 'none';
               nsContent.style.display = 'block';
@@ -412,7 +412,7 @@ export function showWaitingScreen(levelNum) {
         unlockBtn.onclick = () => {
           const pass = document.getElementById('waiting-unlock-passcode').value.trim();
           const err = document.getElementById('waiting-unlock-error');
-          const correct = getExplanationPassword();
+          const correct = getExplanationPassword(levelNum);
           if (pass === correct) {
             waitUnlockWrap.style.display = 'none';
             waitContent.style.display = 'block';
@@ -954,7 +954,7 @@ export function finishCompetition() {
         unlockBtn.onclick = () => {
           const pass = document.getElementById('complete-unlock-passcode').value.trim();
           const err = document.getElementById('complete-unlock-error');
-          const correct = getExplanationPassword();
+          const correct = getExplanationPassword(4);
           if (pass === correct) {
             compUnlockWrap.style.display = 'none';
             compContent.style.display = 'block';

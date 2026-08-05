@@ -11,7 +11,10 @@ const defaultPasscodes = {
   2: "java",
   3: "frontend",
   4: "backend",
-  explanation: "reveal999"
+  exp1: "rev101",
+  exp2: "rev202",
+  exp3: "rev303",
+  exp4: "rev404"
 };
 
 let loadedPasscodes = { ...defaultPasscodes };
@@ -172,15 +175,18 @@ export function getLevelTimerSeconds(levelNum) {
   return val * 60; // minutes to seconds
 }
 
-export function getExplanationPassword() {
+export function getExplanationPassword(levelNum = 1) {
   loadPasscodes(); // ensure fresh reads
-  return loadedPasscodes.explanation || "reveal999";
+  const key = `exp${levelNum}`;
+  const defaultMap = { 1: "rev101", 2: "rev202", 3: "rev303", 4: "rev404" };
+  return loadedPasscodes[key] || loadedPasscodes.explanation || defaultMap[levelNum] || "rev101";
 }
 
-export function setExplanationPassword(newVal) {
+export function setExplanationPassword(levelNum, newVal) {
   const v = String(newVal).trim();
   if (v) {
-    loadedPasscodes.explanation = v;
+    const key = `exp${levelNum}`;
+    loadedPasscodes[key] = v;
     savePasscodes();
   }
 }

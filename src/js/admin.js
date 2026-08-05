@@ -188,6 +188,10 @@ export function renderPasswordsView() {
     'admin-pass-l2',
     'admin-pass-l3',
     'admin-pass-l4',
+    'admin-pass-exp1',
+    'admin-pass-exp2',
+    'admin-pass-exp3',
+    'admin-pass-exp4',
     'admin-timer-l1',
     'admin-timer-l2',
     'admin-timer-l3',
@@ -204,8 +208,15 @@ export function renderPasswordsView() {
   document.getElementById('admin-pass-l2').value = getLevelPassword(2);
   document.getElementById('admin-pass-l3').value = getLevelPassword(3);
   document.getElementById('admin-pass-l4').value = getLevelPassword(4);
-  const explEl = document.getElementById('admin-pass-explanation');
-  if (explEl) explEl.value = getExplanationPassword();
+
+  const exp1El = document.getElementById('admin-pass-exp1');
+  const exp2El = document.getElementById('admin-pass-exp2');
+  const exp3El = document.getElementById('admin-pass-exp3');
+  const exp4El = document.getElementById('admin-pass-exp4');
+  if (exp1El) exp1El.value = getExplanationPassword(1);
+  if (exp2El) exp2El.value = getExplanationPassword(2);
+  if (exp3El) exp3El.value = getExplanationPassword(3);
+  if (exp4El) exp4El.value = getExplanationPassword(4);
 
   document.getElementById('admin-timer-l1').value = getLevelTimer(1);
   document.getElementById('admin-timer-l2').value = getLevelTimer(2);
@@ -226,17 +237,28 @@ export function savePasswordsFromView() {
   const l2Val = document.getElementById('admin-pass-l2').value.trim() || getLevelPassword(2);
   const l3Val = document.getElementById('admin-pass-l3').value.trim() || getLevelPassword(3);
   const l4Val = document.getElementById('admin-pass-l4').value.trim() || getLevelPassword(4);
-  const explEl = document.getElementById('admin-pass-explanation');
-  const explVal = explEl ? (explEl.value.trim() || getExplanationPassword()) : getExplanationPassword();
 
-  // --- Uniqueness validation: all 6 passcodes must be different ---
+  const exp1El = document.getElementById('admin-pass-exp1');
+  const exp2El = document.getElementById('admin-pass-exp2');
+  const exp3El = document.getElementById('admin-pass-exp3');
+  const exp4El = document.getElementById('admin-pass-exp4');
+
+  const exp1Val = exp1El ? (exp1El.value.trim() || getExplanationPassword(1)) : getExplanationPassword(1);
+  const exp2Val = exp2El ? (exp2El.value.trim() || getExplanationPassword(2)) : getExplanationPassword(2);
+  const exp3Val = exp3El ? (exp3El.value.trim() || getExplanationPassword(3)) : getExplanationPassword(3);
+  const exp4Val = exp4El ? (exp4El.value.trim() || getExplanationPassword(4)) : getExplanationPassword(4);
+
+  // --- Uniqueness validation: all 9 passcodes must be different ---
   const passcodeMap = [
-    { label: 'Admin',        value: adminVal },
-    { label: 'Level 1',      value: l1Val },
-    { label: 'Level 2',      value: l2Val },
-    { label: 'Level 3',      value: l3Val },
-    { label: 'Level 4',      value: l4Val },
-    { label: 'Explanation',  value: explVal },
+    { label: 'Admin',                 value: adminVal },
+    { label: 'Level 1 Gate',         value: l1Val },
+    { label: 'Level 2 Gate',         value: l2Val },
+    { label: 'Level 3 Gate',         value: l3Val },
+    { label: 'Level 4 Gate',         value: l4Val },
+    { label: 'Level 1 Explanation',  value: exp1Val },
+    { label: 'Level 2 Explanation',  value: exp2Val },
+    { label: 'Level 3 Explanation',  value: exp3Val },
+    { label: 'Level 4 Explanation',  value: exp4Val },
   ];
 
   for (let i = 0; i < passcodeMap.length; i++) {
@@ -268,7 +290,11 @@ export function savePasswordsFromView() {
   if (l2Val) setLevelPassword(2, l2Val);
   if (l3Val) setLevelPassword(3, l3Val);
   if (l4Val) setLevelPassword(4, l4Val);
-  if (explVal) setExplanationPassword(explVal);
+
+  if (exp1Val) setExplanationPassword(1, exp1Val);
+  if (exp2Val) setExplanationPassword(2, exp2Val);
+  if (exp3Val) setExplanationPassword(3, exp3Val);
+  if (exp4Val) setExplanationPassword(4, exp4Val);
 
   if (t1Val) setLevelTimer(1, t1Val);
   if (t2Val) setLevelTimer(2, t2Val);
