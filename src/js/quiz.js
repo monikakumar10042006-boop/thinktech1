@@ -909,19 +909,32 @@ function startL34Timer(totalSeconds) {
 // COMPLETION
 // ==========================================
 export function finishCompetition() {
-  current.stage = 4;
-  current.status = "completed";
-  saveParticipants();
+  // Ensure current student record is fresh from storage if missing or stale
+  const storedList = loadParticipantsFromStorage();
+  const freshSelf = storedList.find(p => p && current && p.id === current.id) || storedList[0];
+  if (freshSelf) {
+    updateCurrent(freshSelf);
+  }
+
+  if (current) {
+    current.stage = 4;
+    current.status = "completed";
+    saveParticipants();
+  }
   stopAntiCheat();
 
-  document.getElementById('complete-name').textContent = current.fullName;
+  const cNameEl = document.getElementById('complete-name');
+  if (cNameEl && current) cNameEl.textContent = current.fullName || "";
+
   const grid = document.getElementById('complete-scores');
-  grid.innerHTML = `
-    <div class="score-chip"><div class="num">${toOutOf10(current.l1Score, current.l1Max)}/10</div><div class="lbl">Level 1</div></div>
-    <div class="score-chip"><div class="num">${toOutOf10(current.l2Score, current.l2Max)}/10</div><div class="lbl">Level 2</div></div>
-    <div class="score-chip"><div class="num">${toOutOf10(current.l3Score, current.l3Max)}/10</div><div class="lbl">Level 3</div></div>
-    <div class="score-chip"><div class="num">${toOutOf10(current.l4Marks ?? 0, l4MaxTotal())}/10</div><div class="lbl">Level 4</div></div>
-  `;
+  if (grid && current) {
+    grid.innerHTML = `
+      <div class="score-chip"><div class="num">${toOutOf10(current.l1Score || 0, current.l1Max || 10)}/10</div><div class="lbl">Level 1</div></div>
+      <div class="score-chip"><div class="num">${toOutOf10(current.l2Score || 0, current.l2Max || 10)}/10</div><div class="lbl">Level 2</div></div>
+      <div class="score-chip"><div class="num">${toOutOf10(typeof current.l3Score === 'number' ? current.l3Score : 0, current.l3Max || 10)}/10</div><div class="lbl">Level 3</div></div>
+      <div class="score-chip"><div class="num">${toOutOf10(typeof current.l4Marks === 'number' ? current.l4Marks : 0, l4MaxTotal())}/10</div><div class="lbl">Level 4</div></div>
+    `;
+  }
 
   // Render Full Explanations and Answers Review across all levels
   const compWrap = document.getElementById('complete-explanations-wrap');
