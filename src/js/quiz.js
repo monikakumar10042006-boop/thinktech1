@@ -965,6 +965,7 @@ export function finishCompetition() {
       html += `<div style="font-weight:700; color:var(--cyan); margin-top:8px; font-family:var(--font-display); font-size:0.9rem;">LEVEL ${lNum} REVIEW</div>`;
 
       answers.forEach((studentRec, idx) => {
+        if (!studentRec) return;
         let qTitle = "";
         let qAnswer = "";
         let userAnswerHtml = "";

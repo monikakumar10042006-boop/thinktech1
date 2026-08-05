@@ -94,7 +94,10 @@ loadQuestions();
 
 export function getQuestions(levelKey) {
   loadQuestions(); // refresh
-  return loadedQuestions[levelKey];
+  if (loadedQuestions[levelKey] !== undefined) {
+    return loadedQuestions[levelKey];
+  }
+  return defaultQuestions[levelKey];
 }
 
 export function saveQuestions(levelKey, newQuestions) {
@@ -108,5 +111,7 @@ export function resetQuestionsToDefault() {
 }
 
 export function l4MaxTotal() {
-  return getQuestions('l4').reduce((sum, q) => sum + (q.maxMarks || 10), 0);
+  const q = getQuestions('l4');
+  if (!q || !Array.isArray(q)) return 40;
+  return q.reduce((sum, item) => sum + (item.maxMarks || 10), 0);
 }
