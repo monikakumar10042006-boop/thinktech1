@@ -869,7 +869,7 @@ export async function handleConcludeOrReopenRound() {
       }
 
       list.forEach(p => {
-        if (p.status === 'pending-cutoff' && (p.stage || 0) === activeWinnersRound) {
+        if ((p.status === 'pending-cutoff' || p.status === 'in-progress' || !p.status) && (p.stage || 0) <= activeWinnersRound) {
           if (!finalQualifiedIds.has(p.id)) {
             p.status = 'not-selected';
             p.eliminatedAtLevel = activeWinnersRound;
@@ -882,10 +882,17 @@ export async function handleConcludeOrReopenRound() {
       saveParticipants(list);
     }
     
+    const prevRound = activeWinnersRound;
+    if (prevRound < 4) {
+      activeWinnersRound = prevRound + 1;
+      const roundSelect = document.getElementById('admin-winners-round-select');
+      if (roundSelect) roundSelect.value = String(activeWinnersRound);
+    }
+
     renderAdminTable();
     window.dispatchEvent(new Event('storage'));
     forceSync();
-    await showCustomAlert(`Round ${activeWinnersRound} concluded successfully! Results are locked.`, "Round Concluded", "🔒");
+    await showCustomAlert(`Round ${prevRound} concluded successfully! Results are locked. Switched to Round ${activeWinnersRound}.`, "Round Concluded", "🔒");
   }
 }
 

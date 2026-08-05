@@ -20,7 +20,7 @@
       window.goTo('screen-admin-login');
     };
   </script>
-  <script type="module" crossorigin src="/assets/index-DBrdHkNL.js"></script>
+  <script type="module" crossorigin src="/assets/index-Dfn8h12y.js"></script>
   <link rel="stylesheet" crossorigin href="/assets/index-VtxBl0FF.css">
 </head>
 <body>
@@ -608,8 +608,8 @@
     <div class="admin-header">
       <h1>Admin Dashboard</h1>
       <div class="admin-actions">
-        <button class="btn outline" id="admin-export-btn">Export CSV</button>
-        <button class="btn solid" id="admin-clear-btn" style="background: linear-gradient(135deg, var(--danger) 0%, #dc2626 100%); box-shadow: 0 4px 15px rgba(248, 113, 113, 0.3);">Clear All Data</button>
+        <button class="btn outline" id="admin-export-btn" onclick="window.exportCSV()">Export CSV</button>
+        <button class="btn solid" id="admin-clear-btn" onclick="window.clearAllData()" style="background: linear-gradient(135deg, var(--danger) 0%, #dc2626 100%); box-shadow: 0 4px 15px rgba(248, 113, 113, 0.3);">Clear All Data</button>
       </div>
     </div>
     <div class="admin-summary-strip">
@@ -674,7 +674,7 @@
         <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom: 24px; flex-wrap: wrap; gap: 16px;">
           <div style="display:flex; align-items:center; gap:12px;">
             <label style="font-family:var(--font-display); font-weight:600; font-size:0.85rem; color:var(--text-dim); text-transform:uppercase; letter-spacing:0.5px;">Select Round:</label>
-            <select id="admin-winners-round-select" class="type-input" style="width:220px; padding: 8px 12px; background: rgba(8, 11, 20, 0.6); border: var(--glass-border); color: var(--text);">
+            <select id="admin-winners-round-select" class="type-input" onchange="window.renderWinnersView()" style="width:220px; padding: 8px 12px; background: rgba(8, 11, 20, 0.6); border: var(--glass-border); color: var(--text);">
               <option value="1">Round 1 (Level 1 MCQ)</option>
               <option value="2">Round 2 (Level 2 Riddles)</option>
               <option value="3">Round 3 (Level 3 Code)</option>
@@ -682,8 +682,8 @@
             </select>
           </div>
           <div style="display:flex; gap:10px;">
-            <button class="btn solid" id="admin-conclude-round-btn" style="padding: 10px 20px; font-size: 0.85rem; background: linear-gradient(135deg, var(--cyan) 0%, var(--violet) 100%);">Conclude &amp; Lock Round</button>
-            <button class="btn outline" id="admin-export-winners-btn" style="padding: 10px 20px; font-size: 0.85rem;">Export Winners CSV</button>
+            <button class="btn solid" id="admin-conclude-round-btn" onclick="window.handleConcludeOrReopenRound()" style="padding: 10px 20px; font-size: 0.85rem; background: linear-gradient(135deg, var(--cyan) 0%, var(--violet) 100%);">Conclude &amp; Lock Round</button>
+            <button class="btn outline" id="admin-export-winners-btn" onclick="window.exportWinnersCSV()" style="padding: 10px 20px; font-size: 0.85rem;">Export Winners CSV</button>
           </div>
         </div>
 
@@ -700,7 +700,7 @@
         <div class="form-card" style="width:100%; padding:14px 20px; margin-bottom: 24px; display:flex; align-items:center; justify-space-between; flex-wrap:wrap; gap:16px; background: rgba(16, 23, 42, 0.6); border: var(--glass-border);">
           <div style="display:flex; align-items:center; gap:12px;">
             <label style="font-family:var(--font-display); font-weight:600; font-size:0.85rem; color:var(--text-dim); text-transform:uppercase; letter-spacing:0.5px;">Qualification Mode:</label>
-            <select id="admin-qualify-mode-select" class="type-input" style="width:170px; padding: 6px 10px; font-size: 0.82rem; background: rgba(8, 11, 20, 0.8);">
+            <select id="admin-qualify-mode-select" class="type-input" onchange="window.renderWinnersView()" style="width:170px; padding: 6px 10px; font-size: 0.82rem; background: rgba(8, 11, 20, 0.8);">
               <option value="percent">Top Percentage</option>
               <option value="count">Top N Students</option>
               <option value="manual">Manual Selection</option>

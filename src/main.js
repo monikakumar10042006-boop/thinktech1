@@ -34,6 +34,20 @@ window.submitTypedAnswer = submitTypedAnswer;
 window.submitLevel3Question = submitLevel3Question;
 window.submitL34 = submitL34;
 window.savePasswordsFromView = savePasswordsFromView;
+window.handleConcludeOrReopenRound = handleConcludeOrReopenRound;
+window.exportWinnersCSV = exportWinnersCSV;
+window.renderWinnersView = renderWinnersView;
+window.exportCSV = exportCSV;
+window.clearAllData = clearAllData;
+window.setAdminView = setAdminView;
+window.addQuestion = addQuestion;
+window.resetQuestions = resetQuestions;
+window.handleJSONUpload = handleJSONUpload;
+window.closeQuestionModal = closeQuestionModal;
+window.saveQuestionFromModal = saveQuestionFromModal;
+window.submitRegistration = submitRegistration;
+window.dismissCheatWarning = dismissCheatWarning;
+window.showLevelIntro = showLevelIntro;
 
 const initializeApp = () => {
   // Start background live synchronization loop
