@@ -221,13 +221,38 @@ export function renderPasswordsView() {
 }
 
 export function savePasswordsFromView() {
-  const adminVal = document.getElementById('admin-pass-admin').value.trim();
-  const l1Val = document.getElementById('admin-pass-l1').value.trim();
-  const l2Val = document.getElementById('admin-pass-l2').value.trim();
-  const l3Val = document.getElementById('admin-pass-l3').value.trim();
-  const l4Val = document.getElementById('admin-pass-l4').value.trim();
+  const adminVal = document.getElementById('admin-pass-admin').value.trim() || getAdminPassword();
+  const l1Val = document.getElementById('admin-pass-l1').value.trim() || getLevelPassword(1);
+  const l2Val = document.getElementById('admin-pass-l2').value.trim() || getLevelPassword(2);
+  const l3Val = document.getElementById('admin-pass-l3').value.trim() || getLevelPassword(3);
+  const l4Val = document.getElementById('admin-pass-l4').value.trim() || getLevelPassword(4);
   const explEl = document.getElementById('admin-pass-explanation');
-  const explVal = explEl ? explEl.value.trim() : '';
+  const explVal = explEl ? (explEl.value.trim() || getExplanationPassword()) : getExplanationPassword();
+
+  // --- Uniqueness validation: all 6 passcodes must be different ---
+  const passcodeMap = [
+    { label: 'Admin',        value: adminVal },
+    { label: 'Level 1',      value: l1Val },
+    { label: 'Level 2',      value: l2Val },
+    { label: 'Level 3',      value: l3Val },
+    { label: 'Level 4',      value: l4Val },
+    { label: 'Explanation',  value: explVal },
+  ];
+
+  for (let i = 0; i < passcodeMap.length; i++) {
+    for (let j = i + 1; j < passcodeMap.length; j++) {
+      if (passcodeMap[i].value && passcodeMap[j].value &&
+          passcodeMap[i].value.toLowerCase() === passcodeMap[j].value.toLowerCase()) {
+        showCustomAlert(
+          `"${passcodeMap[i].label}" and "${passcodeMap[j].label}" passcodes cannot be the same!\n\nEach passcode must be unique.`,
+          "Duplicate Passcode",
+          "⚠️"
+        );
+        return; // Block save
+      }
+    }
+  }
+  // --- End uniqueness validation ---
 
   const t1Val = document.getElementById('admin-timer-l1').value;
   const t2Val = document.getElementById('admin-timer-l2').value;
@@ -237,7 +262,7 @@ export function savePasswordsFromView() {
   const u1 = document.getElementById('admin-timer-unit-l1');
   const u2 = document.getElementById('admin-timer-unit-l2');
 
-  // Only call setters if a value was typed (empty = keep existing)
+  // Only save if non-empty
   if (adminVal) setAdminPassword(adminVal);
   if (l1Val) setLevelPassword(1, l1Val);
   if (l2Val) setLevelPassword(2, l2Val);
