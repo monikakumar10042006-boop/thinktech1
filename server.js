@@ -49,13 +49,6 @@ try {
     
     // Auto-upgrade stored defaults
     if (!serverSettings.passwords) serverSettings.passwords = {};
-    if (serverSettings.passwords.admin === "gtec1234567" || !serverSettings.passwords.admin) {
-      serverSettings.passwords.admin = "admin123";
-    }
-    if (serverSettings.passwords[1] === "12345") serverSettings.passwords[1] = "python";
-    if (serverSettings.passwords[2] === "abcde") serverSettings.passwords[2] = "java";
-    if (serverSettings.passwords[3] === "67890") serverSettings.passwords[3] = "frontend";
-    if (serverSettings.passwords[4] === "fghij") serverSettings.passwords[4] = "backend";
     
     fs.writeFileSync(SETTINGS_FILE, JSON.stringify(serverSettings, null, 2), 'utf-8');
   } else {

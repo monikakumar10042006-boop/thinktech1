@@ -21,13 +21,6 @@ function loadPasscodes() {
     const stored = localStorage.getItem(PASSWORDS_STORAGE_KEY);
     if (stored) {
       loadedPasscodes = { ...defaultPasscodes, ...JSON.parse(stored) };
-      
-      // Auto-upgrade from old default values to the new requested values
-      if (loadedPasscodes.admin === "gtec1234567") loadedPasscodes.admin = "admin123";
-      if (loadedPasscodes[1] === "12345") loadedPasscodes[1] = "python";
-      if (loadedPasscodes[2] === "abcde") loadedPasscodes[2] = "java";
-      if (loadedPasscodes[3] === "67890") loadedPasscodes[3] = "frontend";
-      if (loadedPasscodes[4] === "fghij") loadedPasscodes[4] = "backend";
       savePasscodes();
     }
   } catch (e) {
