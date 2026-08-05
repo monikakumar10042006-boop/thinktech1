@@ -20,15 +20,14 @@ function loadPasscodes() {
   try {
     const stored = localStorage.getItem(PASSWORDS_STORAGE_KEY);
     if (stored) {
-      loadedPasscodes = { ...defaultPasscodes, ...JSON.parse(stored) };
-      
-      // One-time auto-upgrade old defaults so they can log in
-      if (!localStorage.getItem('thinktech_migrated_admin')) {
-        if (loadedPasscodes.admin === "gtec1234567") loadedPasscodes.admin = "admin123";
-        localStorage.setItem('thinktech_migrated_admin', 'true');
+      const parsed = JSON.parse(stored);
+      // Only fill in keys that are completely missing — never override saved values with defaults
+      loadedPasscodes = { ...defaultPasscodes };
+      for (const key of Object.keys(parsed)) {
+        if (parsed[key] !== undefined && parsed[key] !== null && String(parsed[key]).trim() !== '') {
+          loadedPasscodes[key] = parsed[key];
+        }
       }
-      
-      savePasscodes();
     }
   } catch (e) {
     // fallback to defaults
@@ -50,8 +49,11 @@ export function getAdminPassword() {
 }
 
 export function setAdminPassword(newVal) {
-  loadedPasscodes.admin = newVal.trim();
-  savePasscodes();
+  const v = String(newVal).trim();
+  if (v) {
+    loadedPasscodes.admin = v;
+    savePasscodes();
+  }
 }
 
 export function getLevelPassword(levelNum) {
@@ -60,8 +62,11 @@ export function getLevelPassword(levelNum) {
 }
 
 export function setLevelPassword(levelNum, newVal) {
-  loadedPasscodes[levelNum] = newVal.trim();
-  savePasscodes();
+  const v = String(newVal).trim();
+  if (v) {
+    loadedPasscodes[levelNum] = v;
+    savePasscodes();
+  }
 }
 
 export function getAllPasswords() {
@@ -173,7 +178,10 @@ export function getExplanationPassword() {
 }
 
 export function setExplanationPassword(newVal) {
-  loadedPasscodes.explanation = newVal.trim();
-  savePasscodes();
+  const v = String(newVal).trim();
+  if (v) {
+    loadedPasscodes.explanation = v;
+    savePasscodes();
+  }
 }
 

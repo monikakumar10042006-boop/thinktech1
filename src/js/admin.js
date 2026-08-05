@@ -221,33 +221,34 @@ export function renderPasswordsView() {
 }
 
 export function savePasswordsFromView() {
-  const adminVal = document.getElementById('admin-pass-admin').value.trim() || getAdminPassword();
-  const l1Val = document.getElementById('admin-pass-l1').value.trim() || getLevelPassword(1);
-  const l2Val = document.getElementById('admin-pass-l2').value.trim() || getLevelPassword(2);
-  const l3Val = document.getElementById('admin-pass-l3').value.trim() || getLevelPassword(3);
-  const l4Val = document.getElementById('admin-pass-l4').value.trim() || getLevelPassword(4);
+  const adminVal = document.getElementById('admin-pass-admin').value.trim();
+  const l1Val = document.getElementById('admin-pass-l1').value.trim();
+  const l2Val = document.getElementById('admin-pass-l2').value.trim();
+  const l3Val = document.getElementById('admin-pass-l3').value.trim();
+  const l4Val = document.getElementById('admin-pass-l4').value.trim();
   const explEl = document.getElementById('admin-pass-explanation');
-  const explVal = explEl ? explEl.value.trim() : getExplanationPassword();
+  const explVal = explEl ? explEl.value.trim() : '';
 
-  const t1Val = document.getElementById('admin-timer-l1').value || getLevelTimer(1);
-  const t2Val = document.getElementById('admin-timer-l2').value || getLevelTimer(2);
-  const t3Val = document.getElementById('admin-timer-l3').value || getLevelTimer(3);
-  const t4Val = document.getElementById('admin-timer-l4').value || getLevelTimer(4);
+  const t1Val = document.getElementById('admin-timer-l1').value;
+  const t2Val = document.getElementById('admin-timer-l2').value;
+  const t3Val = document.getElementById('admin-timer-l3').value;
+  const t4Val = document.getElementById('admin-timer-l4').value;
 
   const u1 = document.getElementById('admin-timer-unit-l1');
   const u2 = document.getElementById('admin-timer-unit-l2');
 
-  setAdminPassword(adminVal);
-  setLevelPassword(1, l1Val);
-  setLevelPassword(2, l2Val);
-  setLevelPassword(3, l3Val);
-  setLevelPassword(4, l4Val);
+  // Only call setters if a value was typed (empty = keep existing)
+  if (adminVal) setAdminPassword(adminVal);
+  if (l1Val) setLevelPassword(1, l1Val);
+  if (l2Val) setLevelPassword(2, l2Val);
+  if (l3Val) setLevelPassword(3, l3Val);
+  if (l4Val) setLevelPassword(4, l4Val);
   if (explVal) setExplanationPassword(explVal);
 
-  setLevelTimer(1, t1Val);
-  setLevelTimer(2, t2Val);
-  setLevelTimer(3, t3Val);
-  setLevelTimer(4, t4Val);
+  if (t1Val) setLevelTimer(1, t1Val);
+  if (t2Val) setLevelTimer(2, t2Val);
+  if (t3Val) setLevelTimer(3, t3Val);
+  if (t4Val) setLevelTimer(4, t4Val);
 
   if (u1) setLevelTimerUnit(1, u1.value);
   if (u2) setLevelTimerUnit(2, u2.value);
