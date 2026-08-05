@@ -30,7 +30,7 @@ import {
   getQuestions,
   l4MaxTotal
 } from './questions.js';
-import { getLevelTimerSeconds } from './config.js';
+import { getLevelTimerSeconds, getLevelPassword } from './config.js';
 import { goTo, showLevelIntro, escapeHtml, showCustomConfirm } from './ui.js';
 import { stopAntiCheat } from './cheating.js';
 
@@ -320,16 +320,14 @@ export function checkLevelQualification(levelNum) {
           unlockBtn.onclick = () => {
             const pass = document.getElementById('ns-unlock-passcode').value.trim();
             const err = document.getElementById('ns-unlock-error');
-            import('./config.js').then(cfg => {
-              const correct = cfg.getLevelPassword(levelNum);
-              if (pass === correct) {
-                nsUnlockWrap.style.display = 'none';
-                nsContent.style.display = 'block';
-              } else {
-                err.textContent = "Invalid explanation passcode!";
-                setTimeout(() => { err.textContent = ""; }, 3000);
-              }
-            });
+            const correct = getLevelPassword(levelNum);
+            if (pass === correct) {
+              nsUnlockWrap.style.display = 'none';
+              nsContent.style.display = 'block';
+            } else {
+              err.textContent = "Invalid explanation passcode!";
+              setTimeout(() => { err.textContent = ""; }, 3000);
+            }
           };
         }
       }
@@ -415,16 +413,14 @@ export function showWaitingScreen(levelNum) {
         unlockBtn.onclick = () => {
           const pass = document.getElementById('waiting-unlock-passcode').value.trim();
           const err = document.getElementById('waiting-unlock-error');
-          import('./config.js').then(cfg => {
-            const correct = cfg.getLevelPassword(levelNum);
-            if (pass === correct) {
-              waitUnlockWrap.style.display = 'none';
-              waitContent.style.display = 'block';
-            } else {
-              err.textContent = "Invalid explanation passcode!";
-              setTimeout(() => { err.textContent = ""; }, 3000);
-            }
-          });
+          const correct = getLevelPassword(levelNum);
+          if (pass === correct) {
+            waitUnlockWrap.style.display = 'none';
+            waitContent.style.display = 'block';
+          } else {
+            err.textContent = "Invalid explanation passcode!";
+            setTimeout(() => { err.textContent = ""; }, 3000);
+          }
         };
       }
     }
@@ -947,16 +943,14 @@ export function finishCompetition() {
         unlockBtn.onclick = () => {
           const pass = document.getElementById('complete-unlock-passcode').value.trim();
           const err = document.getElementById('complete-unlock-error');
-          import('./config.js').then(cfg => {
-            const correct = cfg.getLevelPassword(4);
-            if (pass === correct) {
-              compUnlockWrap.style.display = 'none';
-              compContent.style.display = 'block';
-            } else {
-              err.textContent = "Invalid explanation passcode!";
-              setTimeout(() => { err.textContent = ""; }, 3000);
-            }
-          });
+          const correct = getLevelPassword(4);
+          if (pass === correct) {
+            compUnlockWrap.style.display = 'none';
+            compContent.style.display = 'block';
+          } else {
+            err.textContent = "Invalid explanation passcode!";
+            setTimeout(() => { err.textContent = ""; }, 3000);
+          }
         };
       }
     }
