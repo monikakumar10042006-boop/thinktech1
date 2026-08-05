@@ -21,6 +21,10 @@ function loadPasscodes() {
     const stored = localStorage.getItem(PASSWORDS_STORAGE_KEY);
     if (stored) {
       loadedPasscodes = { ...defaultPasscodes, ...JSON.parse(stored) };
+      
+      // Auto-upgrade old defaults so they can log in
+      if (loadedPasscodes.admin === "gtec1234567") loadedPasscodes.admin = "admin123";
+      
       savePasscodes();
     }
   } catch (e) {
@@ -120,6 +124,12 @@ function loadTimerUnits() {
     const stored = localStorage.getItem(TIMER_UNITS_STORAGE_KEY);
     if (stored) {
       loadedTimerUnits = { ...defaultTimerUnits, ...JSON.parse(stored) };
+      
+      // Auto-upgrade old defaults from sec to min
+      if (loadedTimerUnits[1] === "sec") loadedTimerUnits[1] = "min";
+      if (loadedTimerUnits[2] === "sec") loadedTimerUnits[2] = "min";
+      
+      saveTimerUnits();
     }
   } catch (e) {}
 }

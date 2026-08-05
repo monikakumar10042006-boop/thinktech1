@@ -49,6 +49,13 @@ try {
     
     // Auto-upgrade stored defaults
     if (!serverSettings.passwords) serverSettings.passwords = {};
+    if (serverSettings.passwords.admin === "gtec1234567" || !serverSettings.passwords.admin) {
+      serverSettings.passwords.admin = "admin123";
+    }
+    
+    if (!serverSettings.timerUnits) serverSettings.timerUnits = {};
+    if (serverSettings.timerUnits[1] === "sec") serverSettings.timerUnits[1] = "min";
+    if (serverSettings.timerUnits[2] === "sec") serverSettings.timerUnits[2] = "min";
     
     fs.writeFileSync(SETTINGS_FILE, JSON.stringify(serverSettings, null, 2), 'utf-8');
   } else {
