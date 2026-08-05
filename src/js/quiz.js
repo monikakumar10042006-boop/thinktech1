@@ -526,6 +526,7 @@ export function startLevel3() {
   current.l3Max = l4SelectedQuestions.length * 10;
   saveParticipants();
   goTo('screen-level3');
+  startLevel3Timer(getLevelTimerSeconds(3));
   renderLevel3Question();
 }
 
@@ -561,21 +562,24 @@ export function renderLevel3Question() {
     }
   }
 
-  const wrap = document.getElementById('l3-tasks');
-  wrap.innerHTML = q.tasks.map((t, i) => `
-    <div class="l3-task">
-      <div class="task-label">${escapeHtml(t.label)}</div>
-      <pre class="code-block">${escapeHtml(t.code)}</pre>
-      ${t.options ? `
-        <div class="l3-options" id="l3-options-${i}">
-          ${t.options.map((opt, oi) => `<button type="button" class="opt-btn" id="l3-opt-${i}-${oi}">${escapeHtml(opt)}</button>`).join('')}
-        </div>
-      ` : `
-        <textarea class="type-input" id="l3-answer-${i}" placeholder="Type your answer…"></textarea>
-      `}
-      <div class="type-feedback" id="l3-feedback-${i}"></div>
-    </div>
-  `).join('');
+  const tasksEl = document.getElementById('l3-tasks');
+  tasksEl.innerHTML = q.tasks.map((t, idx) => {
+    let inputHtml = "";
+    if (t.options) {
+      inputHtml = `<div class="options-container" id="l3-opts-${idx}">` +
+        t.options.map((opt, oi) => `<button class="opt-btn" id="l3-opt-${idx}-${oi}">${escapeHtml(opt)}</button>`).join('') +
+        `</div>`;
+    } else {
+      inputHtml = `<input type="text" class="type-input" id="l3-answer-${idx}" placeholder="Type your answer...">`;
+    }
+    return `
+      <div class="task-block">
+        <div class="task-q">${escapeHtml(t.label)}</div>
+        ${inputHtml}
+        <div class="type-feedback" id="l3-feedback-${idx}"></div>
+      </div>
+    `;
+  }).join('');
 
   // Setup click listeners for options if present
   q.tasks.forEach((t, i) => {
@@ -588,8 +592,6 @@ export function renderLevel3Question() {
       });
     }
   });
-
-  startLevel3Timer(getLevelTimerSeconds(3));
 }
 
 export function selectL3Option(taskIndex, optionIndex) {
@@ -606,7 +608,6 @@ export function selectL3Option(taskIndex, optionIndex) {
 export function submitLevel3Question() {
   if (l3Submitting) return;
   l3Submitting = true;
-  clearInterval(l34Timer);
   const q = l4SelectedQuestions[l4QIndex];
   let correctCount = 0;
   q.tasks.forEach((t, i) => {
@@ -666,6 +667,7 @@ export function submitLevel3Question() {
 function advanceLevel3() {
   updateL4QIndex(l4QIndex + 1);
   if (l4QIndex >= l4SelectedQuestions.length) {
+    clearInterval(l34Timer);
     current.stage = Math.max(current.stage || 0, 3);
     current.status = "pending-cutoff";
     saveParticipants();
@@ -673,6 +675,32 @@ function advanceLevel3() {
     return;
   }
   renderLevel3Question();
+}
+
+export function expireLevel3() {
+  clearInterval(l34Timer);
+  if (!current.l3Answers) current.l3Answers = [];
+  
+  for (let i = l4QIndex; i < l4SelectedQuestions.length; i++) {
+    const q = l4SelectedQuestions[i];
+    const taskAnswers = q.tasks.map(t => ({
+      label: t.label,
+      userAnswer: "(Timed Out)",
+      correctAnswer: t.answer
+    }));
+    current.l3Answers[i] = {
+      title: `Code Challenge ${i + 1}`,
+      userAnswers: taskAnswers,
+      marks: 0,
+      maxMarks: 10,
+      explanation: q.explanation || ""
+    };
+  }
+  
+  current.stage = Math.max(current.stage || 0, 3);
+  current.status = "pending-cutoff";
+  saveParticipants();
+  showWaitingScreen(3);
 }
 
 function startLevel3Timer(totalSeconds) {
@@ -684,25 +712,25 @@ function startLevel3Timer(totalSeconds) {
   circle.style.strokeDasharray = C;
 
   function updateL3Circle() {
-    const frac = Math.max(l3SecondsLeft, 0) / totalSeconds;
+    const frac = Math.max(l34SecondsLeft, 0) / totalSeconds;
     circle.style.strokeDashoffset = C * (1 - frac);
-    circle.style.stroke = l3SecondsLeft <= 20 ? 'var(--danger)' : (frac < 0.4 ? 'var(--amber)' : 'var(--cyan)');
-    const m = Math.floor(Math.max(l3SecondsLeft, 0) / 60);
-    const s = Math.max(l3SecondsLeft, 0) % 60;
+    circle.style.stroke = l34SecondsLeft <= 20 ? 'var(--danger)' : (frac < 0.4 ? 'var(--amber)' : 'var(--cyan)');
+    const m = Math.floor(Math.max(l34SecondsLeft, 0) / 60);
+    const s = Math.max(l34SecondsLeft, 0) % 60;
     numEl.textContent = `${m}:${s.toString().padStart(2, '0')}`;
   }
 
   updateL3Circle();
   clearInterval(l34Timer);
   const timer = setInterval(() => {
-    updateL34SecondsLeft(l3SecondsLeft - 1);
+    updateL34SecondsLeft(l34SecondsLeft - 1);
     updateL3Circle();
-    if (l3SecondsLeft <= 0) {
+    if (l34SecondsLeft <= 0) {
       clearInterval(timer);
-      submitLevel3Question();
+      expireLevel3();
     }
   }, 1000);
-  updateL3Timer(timer);
+  updateL34Timer(timer);
 }
 
 // ==========================================
@@ -712,6 +740,7 @@ export function startL34Level() {
   updateL4SelectedQuestions(shuffleArray(getQuestions('l4')));
   updateL4QIndex(0);
   goTo('screen-l34');
+  startL34Timer(getLevelTimerSeconds(4));
   renderL34Question();
 }
 
@@ -748,12 +777,10 @@ export function renderL34Question() {
   }
 
   document.getElementById('l34-answer').value = "";
-  startL34Timer(getLevelTimerSeconds(4));
 }
 
 export function submitL34() {
   const answer = document.getElementById('l34-answer').value.trim();
-  clearInterval(l34Timer);
   const q = l4SelectedQuestions[l4QIndex];
   const maxMarks = q.maxMarks || 10;
   const marks = scoreL4Answer(answer, q.answerKey, maxMarks);
@@ -772,10 +799,30 @@ export function submitL34() {
   
   updateL4QIndex(l4QIndex + 1);
   if (l4QIndex >= l4SelectedQuestions.length) {
+    clearInterval(l34Timer);
     finishCompetition();
   } else {
     renderL34Question();
   }
+}
+
+export function expireLevel4() {
+  clearInterval(l34Timer);
+  if (!current.l4Answers) current.l4Answers = [];
+  
+  for (let i = l4QIndex; i < l4SelectedQuestions.length; i++) {
+    const q = l4SelectedQuestions[i];
+    current.l4Answers[i] = {
+      title: q.title,
+      answer: "(Timed Out)",
+      answerKey: q.answerKey,
+      marks: 0,
+      maxMarks: q.maxMarks || 10,
+      explanation: q.explanation || ""
+    };
+  }
+  current.l4Marks = current.l4Answers.reduce((sum, a) => sum + (typeof a.marks === 'number' ? a.marks : 0), 0);
+  finishCompetition();
 }
 
 function startL34Timer(totalSeconds) {
@@ -798,14 +845,14 @@ function startL34Timer(totalSeconds) {
   updateL34Circle();
   clearInterval(l34Timer);
   const timer = setInterval(() => {
-    updateL34SecondsLeft(l3SecondsLeft - 1);
+    updateL34SecondsLeft(l34SecondsLeft - 1);
     updateL34Circle();
-    if (l3SecondsLeft <= 0) {
+    if (l34SecondsLeft <= 0) {
       clearInterval(timer);
-      submitL34();
+      expireLevel4();
     }
   }, 1000);
-  updateL3Timer(timer);
+  updateL34Timer(timer);
 }
 
 // ==========================================

@@ -3,6 +3,7 @@ import { participants, saveParticipants, loadParticipantsFromStorage, isRoundCon
 import { getQuestions, saveQuestions, resetQuestionsToDefault, l4MaxTotal } from './questions.js';
 import { computeLevelRanking, toOutOf10, computeTotal, computeGrade } from './quiz.js';
 import { goTo, escapeHtml, showCustomAlert, showCustomConfirm } from './ui.js';
+import { forceSync } from './sync.js';
 
 let adminLiveInterval = null;
 let adminView = 'all';
@@ -229,6 +230,8 @@ export function savePasswordsFromView() {
 
   if (u1) setLevelTimerUnit(1, u1.value);
   if (u2) setLevelTimerUnit(2, u2.value);
+
+  forceSync();
 
   const successEl = document.getElementById('admin-pass-success');
   successEl.textContent = "Settings saved successfully!";
@@ -682,7 +685,7 @@ export function renderWinnersView() {
   let qualifiedIds = new Set();
 
   if (activeWinnersRound === 4) {
-    rankedRows = finishedParticipants.map(p => ({
+    rankedRows = activeParticipants.map(p => ({
       p,
       score: computeTotal(p),
       max: 40
@@ -826,6 +829,7 @@ export async function handleConcludeOrReopenRound() {
     saveParticipants(list);
     renderAdminTable();
     window.dispatchEvent(new Event('storage'));
+    forceSync();
     await showCustomAlert(`Round ${activeWinnersRound} has been reopened successfully!`, "Round Reopened", "🔓");
   } else {
     const confirmed = await showCustomConfirm(`Are you sure you want to conclude Round ${activeWinnersRound}? This will lock results and finalize the qualifiers/eliminations based on your selected criteria.`, `Conclude Round ${activeWinnersRound}`, "🔒");
@@ -875,6 +879,7 @@ export async function handleConcludeOrReopenRound() {
     
     renderAdminTable();
     window.dispatchEvent(new Event('storage'));
+    forceSync();
     await showCustomAlert(`Round ${activeWinnersRound} concluded successfully! Results are locked.`, "Round Concluded", "🔒");
   }
 }

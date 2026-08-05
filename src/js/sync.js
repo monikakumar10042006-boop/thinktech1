@@ -150,3 +150,8 @@ export function stopLiveSync() {
     console.log("ThinkTech Live Sync loop stopped.");
   }
 }
+
+export async function forceSync() {
+  isSyncing = false;
+  await performSync();
+}
