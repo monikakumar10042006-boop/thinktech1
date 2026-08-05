@@ -960,43 +960,43 @@ export function finishCompetition() {
       const lKey = `l${lNum}`;
       const questions = getQuestions(lKey) || [];
       const answers = current[`${lKey}Answers`] || [];
-      if (!questions.length) return;
+      if (!answers.length) return;
 
       html += `<div style="font-weight:700; color:var(--cyan); margin-top:8px; font-family:var(--font-display); font-size:0.9rem;">LEVEL ${lNum} REVIEW</div>`;
 
-      questions.forEach((q, idx) => {
-        const studentRec = answers[idx] || {};
+      answers.forEach((studentRec, idx) => {
         let qTitle = "";
         let qAnswer = "";
         let userAnswerHtml = "";
 
         if (lKey === 'l1') {
-          qTitle = `${q.emoji} ${escapeHtml(q.question)}`;
-          qAnswer = escapeHtml(q.answer);
+          qTitle = `${studentRec.emoji || ''} ${escapeHtml(studentRec.question || '')}`.trim();
+          qAnswer = escapeHtml(studentRec.correctAnswer || '');
           const uAns = studentRec.userAnswer || "(Not answered)";
           const isOk = studentRec.isCorrect;
           userAnswerHtml = `<span style="color: ${isOk ? 'var(--success)' : 'var(--danger)'}; font-weight:700;">${escapeHtml(uAns)}</span> ${isOk ? '<span class="badge ok" style="padding:2px 6px; font-size:10px; margin-left:6px;">✅ Correct</span>' : '<span class="badge elim" style="padding:2px 6px; font-size:10px; margin-left:6px;">❌ Incorrect</span>'}`;
         } else if (lKey === 'l2') {
-          qTitle = `Riddle ${idx + 1}: ${escapeHtml(q.question)}`;
-          qAnswer = escapeHtml(q.answer);
+          qTitle = `Riddle ${idx + 1}: ${escapeHtml(studentRec.question || '')}`;
+          qAnswer = escapeHtml(studentRec.correctAnswer || '');
           const uAns = studentRec.userAnswer || "(Not answered)";
           const isOk = studentRec.isCorrect;
           userAnswerHtml = `<span style="color: ${isOk ? 'var(--success)' : 'var(--danger)'}; font-weight:700;">${escapeHtml(uAns)}</span> ${isOk ? '<span class="badge ok" style="padding:2px 6px; font-size:10px; margin-left:6px;">✅ Correct</span>' : '<span class="badge elim" style="padding:2px 6px; font-size:10px; margin-left:6px;">❌ Incorrect</span>'}`;
         } else if (lKey === 'l3') {
           qTitle = `Code Challenge ${idx + 1}`;
-          qAnswer = q.tasks ? q.tasks.map(t => `${escapeHtml(t.label)}: <b>${escapeHtml(t.answer)}</b>`).join('<br>') : "";
           if (studentRec.userAnswers) {
-            userAnswerHtml = studentRec.userAnswers.map(t => `${escapeHtml(t.label)}: <b>${escapeHtml(t.userAnswer)}</b>`).join('<br>');
+            qAnswer = studentRec.userAnswers.map(t => `${escapeHtml(t.label)}: <b>${escapeHtml(t.correctAnswer || '')}</b>`).join('<br>');
+            userAnswerHtml = studentRec.userAnswers.map(t => `${escapeHtml(t.label)}: <b>${escapeHtml(t.userAnswer || '')}</b>`).join('<br>');
           } else {
+            qAnswer = "";
             userAnswerHtml = "(Submitted)";
           }
         } else if (lKey === 'l4') {
-          qTitle = escapeHtml(q.title);
-          qAnswer = escapeHtml(q.answerKey);
+          qTitle = escapeHtml(studentRec.title || '');
+          qAnswer = escapeHtml(studentRec.answerKey || '');
           userAnswerHtml = escapeHtml(studentRec.answer || "(Submitted)");
         }
 
-        const explanationText = q.explanation ? escapeHtml(q.explanation) : "No explanation provided.";
+        const explanationText = studentRec.explanation ? escapeHtml(studentRec.explanation) : "No explanation provided.";
 
         html += `
           <div style="background: rgba(22, 29, 51, 0.6); border: var(--glass-border); border-radius: 8px; padding: 12px 14px; font-size: 0.85rem; margin-bottom:6px;">
