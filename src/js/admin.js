@@ -1,4 +1,15 @@
-import { getAdminPassword, setAdminPassword, getLevelPassword, setLevelPassword, getLevelTimer, setLevelTimer } from './config.js';
+import {
+  getAdminPassword,
+  getLevelPassword,
+  getLevelTimer,
+  getLevelTimerUnit,
+  getExplanationPassword,
+  setAdminPassword,
+  setLevelPassword,
+  setLevelTimer,
+  setLevelTimerUnit,
+  setExplanationPassword
+} from './config.js';
 import { participants, saveParticipants, loadParticipantsFromStorage, isRoundConcluded, setRoundConcluded } from './state.js';
 import { getQuestions, saveQuestions, resetQuestionsToDefault, l4MaxTotal } from './questions.js';
 import { computeLevelRanking, toOutOf10, computeTotal, computeGrade } from './quiz.js';
@@ -193,6 +204,8 @@ export function renderPasswordsView() {
   document.getElementById('admin-pass-l2').value = getLevelPassword(2);
   document.getElementById('admin-pass-l3').value = getLevelPassword(3);
   document.getElementById('admin-pass-l4').value = getLevelPassword(4);
+  const explEl = document.getElementById('admin-pass-explanation');
+  if (explEl) explEl.value = getExplanationPassword();
 
   document.getElementById('admin-timer-l1').value = getLevelTimer(1);
   document.getElementById('admin-timer-l2').value = getLevelTimer(2);
@@ -213,6 +226,8 @@ export function savePasswordsFromView() {
   const l2Val = document.getElementById('admin-pass-l2').value.trim() || getLevelPassword(2);
   const l3Val = document.getElementById('admin-pass-l3').value.trim() || getLevelPassword(3);
   const l4Val = document.getElementById('admin-pass-l4').value.trim() || getLevelPassword(4);
+  const explEl = document.getElementById('admin-pass-explanation');
+  const explVal = explEl ? explEl.value.trim() : getExplanationPassword();
 
   const t1Val = document.getElementById('admin-timer-l1').value || getLevelTimer(1);
   const t2Val = document.getElementById('admin-timer-l2').value || getLevelTimer(2);
@@ -227,6 +242,7 @@ export function savePasswordsFromView() {
   setLevelPassword(2, l2Val);
   setLevelPassword(3, l3Val);
   setLevelPassword(4, l4Val);
+  if (explVal) setExplanationPassword(explVal);
 
   setLevelTimer(1, t1Val);
   setLevelTimer(2, t2Val);

@@ -167,3 +167,13 @@ export function getLevelTimerSeconds(levelNum) {
   return val * 60; // minutes to seconds
 }
 
+export function getExplanationPassword() {
+  loadPasscodes(); // ensure fresh reads
+  return loadedPasscodes.explanation || "reveal999";
+}
+
+export function setExplanationPassword(newVal) {
+  loadedPasscodes.explanation = newVal.trim();
+  savePasscodes();
+}
+

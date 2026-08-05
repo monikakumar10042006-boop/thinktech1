@@ -30,7 +30,7 @@ import {
   getQuestions,
   l4MaxTotal
 } from './questions.js';
-import { getLevelTimerSeconds, getLevelPassword } from './config.js';
+import { getLevelTimerSeconds, getLevelPassword, getExplanationPassword } from './config.js';
 import { goTo, showLevelIntro, escapeHtml, showCustomConfirm } from './ui.js';
 import { stopAntiCheat } from './cheating.js';
 
@@ -320,7 +320,7 @@ export function checkLevelQualification(levelNum) {
           unlockBtn.onclick = () => {
             const pass = document.getElementById('ns-unlock-passcode').value.trim();
             const err = document.getElementById('ns-unlock-error');
-            const correct = getLevelPassword(levelNum);
+            const correct = getExplanationPassword();
             if (pass === correct) {
               nsUnlockWrap.style.display = 'none';
               nsContent.style.display = 'block';
@@ -335,14 +335,13 @@ export function checkLevelQualification(levelNum) {
       const levelKey = `l${levelNum}`;
       const levelQuestions = getQuestions(levelKey) || [];
       const studentAnswers = (current && current[`${levelKey}Answers`]) || [];
-      if (levelQuestions.length > 0) {
+      if (studentAnswers.length > 0) {
         nsWrap.style.display = 'block';
-        nsList.innerHTML = levelQuestions.map((q, idx) => {
-          const studentRec = studentAnswers[idx] || {};
-          let qTitle = `${q.emoji || ''} ${escapeHtml(q.question || q.title || '')}`;
-          let qAnswer = escapeHtml(q.answer || q.answerKey || '');
-          let userAnswerHtml = escapeHtml(studentRec.userAnswer || "Submitted");
-          const explanationText = q.explanation ? escapeHtml(q.explanation) : "No explanation provided.";
+        nsList.innerHTML = studentAnswers.map((studentRec, idx) => {
+          let qTitle = `${studentRec.emoji || ''} ${escapeHtml(studentRec.question || studentRec.title || '')}`.trim();
+          let qAnswer = escapeHtml(studentRec.correctAnswer || studentRec.answerKey || '');
+          let userAnswerHtml = escapeHtml(studentRec.userAnswer || studentRec.answer || "Submitted");
+          const explanationText = studentRec.explanation ? escapeHtml(studentRec.explanation) : "No explanation provided.";
           return `
             <div style="background: rgba(22, 29, 51, 0.75); border: 1px solid rgba(251, 191, 36, 0.3); border-radius: 10px; padding: 12px 14px; font-size: 0.88rem; margin-bottom: 8px;">
               <div style="font-weight: 700; color: var(--text); margin-bottom: 4px; font-family: var(--font-display);">${qTitle}</div>
@@ -413,7 +412,7 @@ export function showWaitingScreen(levelNum) {
         unlockBtn.onclick = () => {
           const pass = document.getElementById('waiting-unlock-passcode').value.trim();
           const err = document.getElementById('waiting-unlock-error');
-          const correct = getLevelPassword(levelNum);
+          const correct = getExplanationPassword();
           if (pass === correct) {
             waitUnlockWrap.style.display = 'none';
             waitContent.style.display = 'block';
@@ -429,17 +428,16 @@ export function showWaitingScreen(levelNum) {
     const levelQuestions = getQuestions(levelKey) || [];
     const studentAnswers = (current && current[`${levelKey}Answers`]) || [];
 
-    if (levelQuestions.length > 0) {
+    if (studentAnswers.length > 0) {
       wrap.style.display = 'block';
-      listEl.innerHTML = levelQuestions.map((q, idx) => {
-        const studentRec = studentAnswers[idx] || {};
+      listEl.innerHTML = studentAnswers.map((studentRec, idx) => {
         let qTitle = "";
         let qAnswer = "";
         let userAnswerHtml = "";
 
         if (levelKey === 'l1') {
-          qTitle = `${q.emoji || ''} ${escapeHtml(q.question)}`;
-          qAnswer = escapeHtml(q.answer);
+          qTitle = `${studentRec.emoji || ''} ${escapeHtml(studentRec.question || '')}`.trim();
+          qAnswer = escapeHtml(studentRec.correctAnswer || '');
           const uAns = studentRec.userAnswer;
           if (uAns) {
             const isOk = studentRec.isCorrect;
@@ -448,8 +446,8 @@ export function showWaitingScreen(levelNum) {
             userAnswerHtml = `<span style="color: var(--text-dim); font-style: italic;">Submitted</span>`;
           }
         } else if (levelKey === 'l2') {
-          qTitle = `Riddle ${idx + 1}: ${escapeHtml(q.question)}`;
-          qAnswer = escapeHtml(q.answer);
+          qTitle = `Riddle ${idx + 1}: ${escapeHtml(studentRec.question || '')}`;
+          qAnswer = escapeHtml(studentRec.correctAnswer || '');
           const uAns = studentRec.userAnswer;
           if (uAns) {
             const isOk = studentRec.isCorrect;
@@ -459,19 +457,19 @@ export function showWaitingScreen(levelNum) {
           }
         } else if (levelKey === 'l3') {
           qTitle = `Code Challenge ${idx + 1}`;
-          qAnswer = q.tasks ? q.tasks.map(t => `${escapeHtml(t.label)}: <b>${escapeHtml(t.answer)}</b>`).join('<br>') : "";
           if (studentRec.userAnswers) {
-            userAnswerHtml = studentRec.userAnswers.map(t => `${escapeHtml(t.label)}: <b>${escapeHtml(t.userAnswer)}</b>`).join('<br>');
+            qAnswer = studentRec.userAnswers.map(t => `${escapeHtml(t.label)}: <b>${escapeHtml(t.correctAnswer || '')}</b>`).join('<br>');
+            userAnswerHtml = studentRec.userAnswers.map(t => `${escapeHtml(t.label)}: <b>${escapeHtml(t.userAnswer || '')}</b>`).join('<br>');
           } else {
             userAnswerHtml = `<span style="color: var(--text-dim); font-style: italic;">Submitted</span>`;
           }
         } else if (levelKey === 'l4') {
-          qTitle = escapeHtml(q.title);
-          qAnswer = escapeHtml(q.answerKey);
+          qTitle = escapeHtml(studentRec.title || '');
+          qAnswer = escapeHtml(studentRec.answerKey || '');
           userAnswerHtml = escapeHtml(studentRec.answer || "Submitted");
         }
 
-        const explanationText = q.explanation ? escapeHtml(q.explanation) : "No explanation provided.";
+        const explanationText = studentRec.explanation ? escapeHtml(studentRec.explanation) : "No explanation provided.";
 
         return `
           <div style="background: rgba(22, 29, 51, 0.75); border: 1px solid rgba(94, 234, 212, 0.25); border-radius: 10px; padding: 14px 16px; font-size: 0.88rem; margin-bottom: 8px;">
@@ -943,7 +941,7 @@ export function finishCompetition() {
         unlockBtn.onclick = () => {
           const pass = document.getElementById('complete-unlock-passcode').value.trim();
           const err = document.getElementById('complete-unlock-error');
-          const correct = getLevelPassword(4);
+          const correct = getExplanationPassword();
           if (pass === correct) {
             compUnlockWrap.style.display = 'none';
             compContent.style.display = 'block';
@@ -1045,3 +1043,18 @@ export function computeTotal(p) {
 export function renderCompleteScreen() {
   finishCompetition();
 }
+
+// Auto-advance from waiting screen when admin concludes round
+window.addEventListener('storage', () => {
+  const waitScreen = document.getElementById('screen-waiting');
+  if (waitScreen && waitScreen.classList.contains('active')) {
+    import('./state.js').then(state => {
+      const levelNum = state.current ? state.current.stage || 1 : 1;
+      if (state.isRoundConcluded(levelNum)) {
+        if (checkLevelQualification(levelNum)) {
+          import('./ui.js').then(ui => ui.showLevelIntro(levelNum + 1));
+        }
+      }
+    });
+  }
+});
