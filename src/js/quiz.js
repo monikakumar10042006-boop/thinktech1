@@ -301,7 +301,7 @@ export function checkLevelQualification(levelNum) {
     const scoreKey = { 1: 'l1Score', 2: 'l2Score', 3: 'l3Score' }[levelNum];
     const maxKey = { 1: 'l1Max', 2: 'l2Max', 3: 'l3Max' }[levelNum];
     document.getElementById('ns-reason').textContent =
-      current.eliminatedReason || `You scored ${toOutOf10(current[scoreKey], current[maxKey])}/10 in Level ${levelNum} — that wasn't in the top half of the field this round, so your run ends here. Thanks for competing!`;
+      current.eliminatedReason || `This round has been concluded by the coordinator. Thank you for participating in Level ${levelNum}!`;
 
     const nsWrap = document.getElementById('ns-explanations-wrap');
     const nsList = document.getElementById('ns-explanations-list');
@@ -377,7 +377,7 @@ export function showWaitingScreen(levelNum) {
   
   const lNames = { 1: "Level 1 (Emoji Decode)", 2: "Level 2 (Riddles)", 3: "Level 3 (Code Challenge)" };
   document.getElementById('wait-title').textContent = `${lNames[levelNum]} Completed!`;
-  document.getElementById('wait-message').textContent = `You have completed this round successfully. The event coordinator will evaluate submissions and lock the cutoff shortly. Press the check button below to verify your standing once announced.`;
+  document.getElementById('wait-message').textContent = `You have completed this round successfully. The event coordinator is evaluating all submissions. Press the button below once the coordinator announces results.`;
   document.getElementById('wait-error-msg').textContent = "";
 
   const refreshBtn = document.getElementById('wait-refresh-btn');
@@ -385,7 +385,7 @@ export function showWaitingScreen(levelNum) {
     refreshBtn.onclick = () => {
       document.getElementById('wait-error-msg').textContent = "";
       if (!isRoundConcluded(levelNum)) {
-        document.getElementById('wait-error-msg').textContent = "This round has not been concluded yet. Please wait for the coordinator.";
+        document.getElementById('wait-error-msg').textContent = "Results are not ready yet. Please wait for the coordinator to announce.";
         return;
       }
       if (checkLevelQualification(levelNum)) {
