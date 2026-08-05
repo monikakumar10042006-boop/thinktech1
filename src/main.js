@@ -33,6 +33,7 @@ window.buddyPoke = buddyPoke;
 window.submitTypedAnswer = submitTypedAnswer;
 window.submitLevel3Question = submitLevel3Question;
 window.submitL34 = submitL34;
+window.savePasswordsFromView = savePasswordsFromView;
 
 const initializeApp = () => {
   // Start background live synchronization loop
