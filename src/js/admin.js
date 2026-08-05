@@ -171,6 +171,23 @@ export function renderAdminViews() {
 // PASSCODES EDITOR VIEW
 // ==========================================
 export function renderPasswordsView() {
+  const inputs = [
+    'admin-pass-admin',
+    'admin-pass-l1',
+    'admin-pass-l2',
+    'admin-pass-l3',
+    'admin-pass-l4',
+    'admin-timer-l1',
+    'admin-timer-l2',
+    'admin-timer-l3',
+    'admin-timer-l4'
+  ];
+  const isTyping = inputs.some(id => {
+    const el = document.getElementById(id);
+    return el && document.activeElement === el;
+  });
+  if (isTyping) return;
+
   document.getElementById('admin-pass-admin').value = getAdminPassword();
   document.getElementById('admin-pass-l1').value = getLevelPassword(1);
   document.getElementById('admin-pass-l2').value = getLevelPassword(2);
