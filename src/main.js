@@ -100,10 +100,20 @@ const initializeApp = () => {
   }
 
   // 3. Bind navigation & registration form buttons
-  const regBtn = document.querySelector('#screen-register button.solid');
+  const regBtn = document.getElementById('reg-submit-btn') || document.querySelector('#screen-register button.solid');
   if (regBtn) {
+    regBtn.onclick = submitRegistration;
     regBtn.addEventListener('click', submitRegistration);
   }
+
+  ['reg-name', 'reg-year', 'reg-number', 'reg-email'].forEach(id => {
+    const input = document.getElementById(id);
+    if (input) {
+      input.addEventListener('keyup', (e) => {
+        if (e.key === 'Enter') submitRegistration();
+      });
+    }
+  });
 
   const welcomeRegBtn = document.getElementById('welcome-reg-btn') || document.querySelector('#screen-welcome button.solid');
   if (welcomeRegBtn) {

@@ -204,7 +204,7 @@
         <input type="email" id="reg-email" placeholder="you@example.com" autocomplete="off" class="type-input">
       </div>
       <div class="error-msg" id="reg-error"></div>
-      <button class="btn solid" style="width:100%">Continue to Level 1</button>
+      <button type="button" class="btn solid" id="reg-submit-btn" onclick="window.submitRegistration ? window.submitRegistration() : submitRegistration()" style="width:100%">Continue to Level 1</button>
     </div>
     <div class="footer-note">All fields are required</div>
   </div>
