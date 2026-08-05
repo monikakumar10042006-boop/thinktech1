@@ -46,6 +46,28 @@ try {
   if (fs.existsSync(SETTINGS_FILE)) {
     const raw = fs.readFileSync(SETTINGS_FILE, 'utf-8');
     serverSettings = JSON.parse(raw || '{}');
+    
+    // Auto-upgrade stored defaults
+    if (!serverSettings.passwords) serverSettings.passwords = {};
+    if (serverSettings.passwords.admin === "gtec1234567" || !serverSettings.passwords.admin) {
+      serverSettings.passwords.admin = "admin123";
+    }
+    if (serverSettings.passwords[1] === "12345") serverSettings.passwords[1] = "python";
+    if (serverSettings.passwords[2] === "abcde") serverSettings.passwords[2] = "java";
+    if (serverSettings.passwords[3] === "67890") serverSettings.passwords[3] = "frontend";
+    if (serverSettings.passwords[4] === "fghij") serverSettings.passwords[4] = "backend";
+    
+    fs.writeFileSync(SETTINGS_FILE, JSON.stringify(serverSettings, null, 2), 'utf-8');
+  } else {
+    // Initialize default passwords
+    serverSettings.passwords = {
+      admin: "admin123",
+      1: "python",
+      2: "java",
+      3: "frontend",
+      4: "backend"
+    };
+    fs.writeFileSync(SETTINGS_FILE, JSON.stringify(serverSettings, null, 2), 'utf-8');
   }
 } catch (e) {
   console.error("Failed to load settings.json", e);
